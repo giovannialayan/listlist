@@ -1,0 +1,8 @@
+.titleContainer {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.titleContainer > * {
+  margin-left: 0.5rem;
+}
