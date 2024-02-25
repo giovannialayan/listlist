@@ -1,15 +1,20 @@
 import Button from 'react-bootstrap/Button';
 import '../styles/ListControls.css';
 import { useState, useRef } from 'react';
+import AddControl from './AddControl';
 
 interface Props {
+  groups: string[];
   addGroup: (groupName: string) => void;
+  addItem: (itemName: string, itemGroups: string[]) => void;
 }
 
-function ListControls({ addGroup }: Props) {
+function ListControls({ groups, addGroup, addItem }: Props) {
   const [groupEditMode, setGroupEditMode] = useState(false);
   const [newGroup, setNewGroup] = useState('');
   const groupInputRef = useRef<HTMLInputElement>(null);
+
+  const [itemAddMode, setItemAddMode] = useState(false);
 
   const handleNewGroup = (groupName: string) => {
     addGroup(groupName);
@@ -48,13 +53,40 @@ function ListControls({ addGroup }: Props) {
             <Button
               onClick={() => {
                 setGroupEditMode(true);
-                console.log(groupInputRef.current);
                 if (groupInputRef.current) {
                   groupInputRef.current.focus();
                 }
               }}
             >
               New Group
+            </Button>
+          </>
+        )}
+      </div>
+      <div>
+        {itemAddMode && (
+          <>
+            <AddControl
+              onSubmit={(data) => {
+                addItem(data.text, data.selections);
+                setItemAddMode(false);
+              }}
+              dropdownOptions={groups.map((group, index) => {
+                return { id: index, label: group, default: index == 0 };
+              })}
+            >
+              Add Item
+            </AddControl>
+          </>
+        )}
+        {!itemAddMode && (
+          <>
+            <Button
+              onClick={() => {
+                setItemAddMode(true);
+              }}
+            >
+              New Item
             </Button>
           </>
         )}

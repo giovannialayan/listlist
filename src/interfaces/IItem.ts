@@ -1,5 +1,7 @@
 interface Item {
-  data: { [key: string]: string };
+  name: string;
+  groups: string[];
+  groupPositions: number[];
 }
 
 export default Item;

@@ -1,6 +1,8 @@
+import Item from './IItem';
+
 interface ListData {
   groups: string[];
-  listItems: { [key: string]: string }[];
+  items: Item[];
 }
 
 export default ListData;

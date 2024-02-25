@@ -7,19 +7,25 @@ import ListData from './interfaces/IListData';
 
 function App() {
   const [listTitle, setListTitle] = useState('title');
-  const [listData, setListData] = useState({ groups: ['None'], listItems: [] } as ListData);
+  const [listData, setListData] = useState({ groups: ['None'], items: [] } as ListData);
 
   const addGroup = (groupName: string) => {
     let oldGroups = listData.groups;
     oldGroups.push(groupName);
-    setListData({ groups: oldGroups, listItems: listData.listItems });
+    setListData({ groups: oldGroups, items: listData.items });
+  };
+
+  const addItem = (itemName: string, itemGroups: string[]) => {
+    let oldItems = listData.items;
+    oldItems.push({ name: itemName, groups: itemGroups, groupPositions: [] });
+    setListData({ groups: listData.groups, items: listData.items });
   };
 
   return (
     <>
       <ListTitle editTitle={setListTitle}>{listTitle}</ListTitle>
-      <ListControls addGroup={addGroup}></ListControls>
-      <ListGroup listData={[{ name: 'one', id: '1', b: 'a' }, { name: 'two' }]} listGroups={listData.groups}></ListGroup>
+      <ListControls groups={listData.groups} addGroup={addGroup} addItem={addItem}></ListControls>
+      <ListGroup listData={listData}></ListGroup>
     </>
   );
 }
