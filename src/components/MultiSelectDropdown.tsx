@@ -7,7 +7,17 @@ interface Props {
 }
 
 function MultiSelectDropdown({ options, onChange }: Props) {
-  const [selectedOptions, setSelectedOptions] = useState([] as number[]);
+  const getInitialSelected = (): number[] => {
+    const defaultOptions = options.filter((option) => {
+      return option.default;
+    });
+
+    return defaultOptions.map((option) => {
+      return option.id;
+    });
+  };
+
+  const [selectedOptions, setSelectedOptions] = useState(getInitialSelected);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionChange = (id: number, checked: boolean) => {
@@ -21,7 +31,7 @@ function MultiSelectDropdown({ options, onChange }: Props) {
 
     setSelectedOptions(tempSelectedOptions);
 
-    let selections = options.filter((option) => tempSelectedOptions.includes(option.id) || option.default).map((option) => option.label);
+    let selections = options.filter((option) => tempSelectedOptions.includes(option.id)).map((option) => option.label);
 
     onChange(selections);
   };
@@ -41,12 +51,12 @@ function MultiSelectDropdown({ options, onChange }: Props) {
       <div className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby='multiSelectDropdown'>
         {options.map((option) => (
           <Form.Check
-            disabled={option.default}
+            // disabled={option.default}
             key={option.id}
             type='checkbox'
             id={`option_${option.id}`}
             label={option.label}
-            checked={selectedOptions.includes(option.id) || option.default}
+            checked={selectedOptions.includes(option.id)}
             onChange={(e) => handleOptionChange(option.id, e.currentTarget.checked)}
             value={option.id}
           />

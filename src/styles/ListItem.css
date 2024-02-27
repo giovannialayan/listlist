@@ -1,0 +1,9 @@
+.listItem {
+  display: flex !important;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+
+.dragOver {
+  border-bottom: 1px solid red !important;
+}

@@ -1,27 +1,30 @@
-import { DragEvent } from 'react';
+import { MdDragHandle } from 'react-icons/md';
+import Item from '../interfaces/IItem';
+import '../styles/ListItem.css';
 
 interface Props {
-  item: string;
+  item: Item;
   parentGroup: string;
-  index: number;
+  onDragStart: (item: Item, parentGroup: string) => void;
+  onDragEnter: (item: Item, parentGroup: string) => void;
+  onDragEnd: () => void;
+  dragOver: boolean;
 }
 
-function ListItem({ item, parentGroup, index }: Props) {
-  const onDragStart = (e: DragEvent) => {
-    console.log('drag start', index);
-  };
-
-  const onDragEnter = (e: DragEvent) => {
-    console.log('drag enter', index);
-  };
-
-  const onDragEnd = (e: DragEvent) => {
-    console.log('drag end');
-  };
-
+function ListItem({ item, parentGroup, onDragStart, onDragEnter, onDragEnd, dragOver }: Props) {
   return (
-    <li className='list-group-item' draggable onDragStart={onDragStart} onDragEnter={onDragEnter} onDragEnd={onDragEnd}>
-      <div>{item}</div>
+    <li
+      className={'list-group-item listItem' + (dragOver ? ' dragOver' : '')}
+      draggable
+      onDragStart={() => onDragStart(item, parentGroup)}
+      onDragEnter={() => onDragEnter(item, parentGroup)}
+      onDragEnd={onDragEnd}
+      onDragOver={(e) => e.preventDefault()}
+    >
+      <div>
+        <MdDragHandle />
+      </div>
+      <div>{item.name}</div>
     </li>
   );
 }

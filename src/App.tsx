@@ -5,6 +5,7 @@ import ListControls from './components/ListControls';
 import ListTitle from './components/ListTitle';
 import ListData from './interfaces/IListData';
 import Item from './interfaces/IItem';
+import { groupPositionSort } from './utils';
 
 function App() {
   const initData = {
@@ -42,30 +43,28 @@ function App() {
   const [listData, setListData] = useState(initData as ListData);
 
   const addGroup = (groupName: string) => {
-    let oldGroups = listData.groups;
-    oldGroups.push(groupName);
-    setListData({ groups: oldGroups, items: listData.items });
-  };
-
-  const addItem = (itemName: string, itemGroups: string[]) => {
-    let oldItems = listData.items;
-    oldItems.push({ name: itemName, groups: itemGroups, groupPositions: new Map(itemGroups.map((group) => [group, 0])), properties: {} });
+    listData.groups.push(groupName);
     setListData({ groups: listData.groups, items: listData.items });
   };
 
-  const editGroupPos = (item: Item, group: string, newPos: number) => {
-    let oldItems = listData.items;
-    const changedItemIndex = oldItems.indexOf(item);
+  const addItem = (itemName: string, itemGroups: string[]) => {
+    listData.items.push({ name: itemName, groups: itemGroups, groupPositions: new Map(itemGroups.map((group) => [group, 0])), properties: {} });
+    setListData({ groups: listData.groups, items: listData.items });
+  };
 
-    oldItems[changedItemIndex].groupPositions.set(group, newPos);
+  const editGroupPos = (item: Item, group: string, prevPos: number, newPos: number) => {
+    let itemsInGroup = listData.items.filter((item) => item.groups.includes(group));
 
-    for (let i = 0; i < oldItems.length; i++) {
-      const groupPos = oldItems[i].groupPositions.get(group);
-      if (oldItems[i].groups.includes(group) && groupPos !== undefined && groupPos >= newPos && i !== changedItemIndex) {
-        oldItems[i].groupPositions.set(group, groupPos + 1);
-      }
+    itemsInGroup.sort((a, b) => groupPositionSort(a, b, group));
+
+    itemsInGroup.splice(prevPos, 1);
+    itemsInGroup.splice(newPos, 0, item);
+
+    for (let i = 0; i < itemsInGroup.length; i++) {
+      itemsInGroup[i].groupPositions.set(group, i);
     }
-    setListData({ groups: listData.groups, items: oldItems });
+
+    setListData({ groups: listData.groups, items: listData.items });
   };
 
   return (
