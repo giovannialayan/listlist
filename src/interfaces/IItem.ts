@@ -1,7 +1,8 @@
 interface Item {
   name: string;
   groups: string[];
-  groupPositions: number[];
+  groupPositions: Map<string, number>;
+  properties: { [key: string]: string };
 }
 
 export default Item;

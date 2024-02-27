@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import '../styles/ListControls.css';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import AddControl from './AddControl';
 
 interface Props {
@@ -10,52 +10,32 @@ interface Props {
 }
 
 function ListControls({ groups, addGroup, addItem }: Props) {
-  const [groupEditMode, setGroupEditMode] = useState(false);
-  const [newGroup, setNewGroup] = useState('');
-  const groupInputRef = useRef<HTMLInputElement>(null);
-
+  const [groupAddMode, setGroupAddMode] = useState(false);
   const [itemAddMode, setItemAddMode] = useState(false);
-
-  const handleNewGroup = (groupName: string) => {
-    addGroup(groupName);
-    setNewGroup('');
-    setGroupEditMode(false);
-  };
 
   return (
     <div className='container-fluid'>
       <div>
-        {groupEditMode && (
+        {groupAddMode && (
           <>
-            <input
-              ref={groupInputRef}
-              type='text'
-              value={newGroup}
-              onChange={(e) => setNewGroup(e.currentTarget.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleNewGroup(newGroup);
-                }
+            <AddControl
+              onSubmit={(data) => {
+                addGroup(data.text);
+                setGroupAddMode(false);
               }}
-              autoFocus
-            ></input>
-            <Button
-              onClick={() => {
-                handleNewGroup(newGroup);
+              onCancel={() => {
+                setGroupAddMode(false);
               }}
             >
               Add Group
-            </Button>
+            </AddControl>
           </>
         )}
-        {!groupEditMode && (
+        {!groupAddMode && (
           <>
             <Button
               onClick={() => {
-                setGroupEditMode(true);
-                if (groupInputRef.current) {
-                  groupInputRef.current.focus();
-                }
+                setGroupAddMode(true);
               }}
             >
               New Group
@@ -69,6 +49,9 @@ function ListControls({ groups, addGroup, addItem }: Props) {
             <AddControl
               onSubmit={(data) => {
                 addItem(data.text, data.selections);
+                setItemAddMode(false);
+              }}
+              onCancel={() => {
                 setItemAddMode(false);
               }}
               dropdownOptions={groups.map((group, index) => {

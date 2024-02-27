@@ -1,14 +1,16 @@
 import { Button } from 'react-bootstrap';
 import { useState } from 'react';
+import { MdCancel } from 'react-icons/md';
 import MultiSelectDropdown from './MultiSelectDropdown';
 
 interface Props {
   children: string;
+  dropdownOptions?: { id: number; label: string; default: boolean }[];
   onSubmit: (data: { text: string; selections: string[] }) => void;
-  dropdownOptions: { id: number; label: string; default: boolean }[];
+  onCancel: () => void;
 }
 
-function AddControl({ children, onSubmit, dropdownOptions }: Props) {
+function AddControl({ children, dropdownOptions = [], onSubmit, onCancel }: Props) {
   const [inputText, setInputText] = useState('');
   const [dropdownSelections, setDropdownSelections] = useState([] as string[]);
 
@@ -19,8 +21,16 @@ function AddControl({ children, onSubmit, dropdownOptions }: Props) {
     }
   };
 
+  const handleCancel = () => {
+    onCancel();
+    setInputText('');
+  };
+
   return (
     <>
+      <a onClick={handleCancel}>
+        <MdCancel />
+      </a>
       <input
         type='text'
         value={inputText}
@@ -28,6 +38,8 @@ function AddControl({ children, onSubmit, dropdownOptions }: Props) {
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             handleSubmit(inputText, dropdownSelections);
+          } else if (e.key === 'Escape') {
+            handleCancel();
           }
         }}
         autoFocus
