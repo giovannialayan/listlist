@@ -1,6 +1,8 @@
 import { MdDragHandle } from 'react-icons/md';
 import Item from '../interfaces/IItem';
 import '../styles/ListItem.css';
+import { useState } from 'react';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 interface Props {
   item: Item;
@@ -12,6 +14,8 @@ interface Props {
 }
 
 function ListItem({ item, parentGroup, onDragStart, onDragEnter, onDragEnd, dragOver }: Props) {
+  const [propertiesVisible, setPropertiesVisible] = useState(false);
+
   return (
     <li
       className={'list-group-item listItem' + (dragOver ? ' dragOver' : '')}
@@ -21,10 +25,27 @@ function ListItem({ item, parentGroup, onDragStart, onDragEnter, onDragEnd, drag
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
-      <div>
-        <MdDragHandle />
+      <div className='itemTop'>
+        <div>
+          <MdDragHandle />
+        </div>
+        <div>{item.name}</div>
+        <div>
+          <a onClick={() => setPropertiesVisible(!propertiesVisible)}>
+            {!propertiesVisible && <IoIosArrowDown />}
+            {propertiesVisible && <IoIosArrowUp />}
+          </a>
+        </div>
       </div>
-      <div>{item.name}</div>
+      <div className={propertiesVisible ? '' : 'collapse'}>
+        {item.properties.map((property, index) => {
+          return (
+            <p key={index}>
+              {property.name}: {property.data}
+            </p>
+          );
+        })}
+      </div>
     </li>
   );
 }

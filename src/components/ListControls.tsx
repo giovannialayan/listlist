@@ -7,11 +7,13 @@ interface Props {
   groups: string[];
   addGroup: (groupName: string) => void;
   addItem: (itemName: string, itemGroups: string[]) => void;
+  addProperty: (propertyName: string) => void;
 }
 
-function ListControls({ groups, addGroup, addItem }: Props) {
+function ListControls({ groups, addGroup, addItem, addProperty }: Props) {
   const [groupAddMode, setGroupAddMode] = useState(false);
   const [itemAddMode, setItemAddMode] = useState(false);
+  const [propertyAddMode, setPropertyAddMode] = useState(false);
 
   return (
     <div className='container-fluid'>
@@ -39,6 +41,34 @@ function ListControls({ groups, addGroup, addItem }: Props) {
               }}
             >
               New Group
+            </Button>
+          </>
+        )}
+      </div>
+      <div>
+        {propertyAddMode && (
+          <>
+            <AddControl
+              onSubmit={(data) => {
+                addProperty(data.text);
+                setPropertyAddMode(false);
+              }}
+              onCancel={() => {
+                setPropertyAddMode(false);
+              }}
+            >
+              Add Property
+            </AddControl>
+          </>
+        )}
+        {!propertyAddMode && (
+          <>
+            <Button
+              onClick={() => {
+                setPropertyAddMode(true);
+              }}
+            >
+              New Property
             </Button>
           </>
         )}

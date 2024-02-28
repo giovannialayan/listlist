@@ -65,7 +65,7 @@ function ListGroup({ listData, editGroupPos }: Props) {
           return (
             (group === currentGroup || currentGroup === '') && (
               <div key={index}>
-                <p>{group}</p>
+                <h5>{group}</h5>
                 <ul className='list-group list-group-flush'>
                   {[...listData.items]
                     .sort((a, b) => groupPositionSort(a, b, group))

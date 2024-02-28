@@ -2,7 +2,7 @@ interface Item {
   name: string;
   groups: string[];
   groupPositions: Map<string, number>;
-  properties: { [key: string]: string };
+  properties: { name: string; data: string }[];
 }
 
 export default Item;
