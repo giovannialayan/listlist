@@ -13,34 +13,46 @@ function App() {
     items: [
       {
         name: 'first',
+        id: 0,
         groups: ['Default', 'a'],
         groupPositions: new Map([
           ['Default', 0],
           ['a', 0],
         ]),
-        properties: [],
+        properties: [
+          { name: 'notes', data: 'no' },
+          { name: 'prop', data: '' },
+        ],
       },
       {
         name: 'second',
+        id: 1,
         groups: ['Default', 'b'],
         groupPositions: new Map([
           ['Default', 1],
           ['b', 0],
         ]),
-        properties: [],
+        properties: [
+          { name: 'notes', data: '' },
+          { name: 'prop', data: '' },
+        ],
       },
       {
         name: 'third',
+        id: 2,
         groups: ['Default', 'c'],
         groupPositions: new Map([
           ['Default', 2],
           ['c', 0],
         ]),
-        properties: [],
+        properties: [
+          { name: 'notes', data: '' },
+          { name: 'prop', data: '' },
+        ],
       },
     ],
     subGroups: [],
-    properties: [],
+    properties: ['notes', 'prop'],
   };
 
   const [listTitle, setListTitle] = useState('title');
@@ -53,7 +65,13 @@ function App() {
   };
 
   const addItem = (itemName: string, itemGroups: string[]) => {
-    listData.items.push({ name: itemName, groups: itemGroups, groupPositions: new Map(itemGroups.map((group) => [group, 0])), properties: [] });
+    listData.items.push({
+      name: itemName,
+      id: listData.items.length - 1,
+      groups: itemGroups,
+      groupPositions: new Map(itemGroups.map((group) => [group, 0])),
+      properties: [],
+    });
     setListData({ groups: listData.groups, items: listData.items, subGroups: listData.subGroups, properties: listData.properties });
   };
 
@@ -77,11 +95,20 @@ function App() {
     setListData({ groups: listData.groups, items: listData.items, subGroups: listData.subGroups, properties: listData.properties });
   };
 
+  const editItem = (item: Item, editedItem: Item) => {
+    const itemIndex = listData.items.indexOf(item);
+    listData.items[itemIndex] = editedItem;
+
+    setListData({ groups: listData.groups, items: listData.items, subGroups: listData.subGroups, properties: listData.properties });
+  };
+
+  //remove item note: keep item.id same as index in listdata.items
+
   return (
     <>
       <ListTitle editTitle={setListTitle}>{listTitle}</ListTitle>
       <ListControls groups={listData.groups} addGroup={addGroup} addItem={addItem} addProperty={addProperty}></ListControls>
-      <ListGroup listData={listData} editGroupPos={editGroupPos}></ListGroup>
+      <ListGroup listData={listData} editGroupPos={editGroupPos} editItem={editItem}></ListGroup>
     </>
   );
 }

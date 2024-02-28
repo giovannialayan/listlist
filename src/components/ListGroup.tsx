@@ -3,23 +3,15 @@ import ListItem from './ListItem';
 import { useState } from 'react';
 import ListData from '../interfaces/IListData';
 import Item from '../interfaces/IItem';
+import { groupPositionSort } from '../utils';
 
 interface Props {
   listData: ListData;
   editGroupPos: (item: Item, group: string, prevPos: number, newPos: number) => void;
+  editItem: (item: Item, editedItem: Item) => void;
 }
 
-const groupPositionSort = (itemA: Item, itemB: Item, group: string) => {
-  const aPos = itemA.groupPositions.get(group);
-  const bPos = itemB.groupPositions.get(group);
-  if (aPos !== undefined && bPos !== undefined) {
-    return aPos - bPos;
-  } else {
-    return 0;
-  }
-};
-
-function ListGroup({ listData, editGroupPos }: Props) {
+function ListGroup({ listData, editGroupPos, editItem }: Props) {
   const [currentGroup, setCurrentGroup] = useState('');
   const [dropGroup, setDropGroup] = useState('');
   const [draggingItem, setDraggingItem] = useState({} as Item);
@@ -73,9 +65,10 @@ function ListGroup({ listData, editGroupPos }: Props) {
                       return (
                         item.groups.includes(group) && (
                           <ListItem
-                            key={item.name}
+                            key={item.id}
                             item={item}
                             parentGroup={group}
+                            editItem={editItem}
                             onDragStart={onDragStart}
                             onDragEnter={onDragEnter}
                             onDragEnd={onDragEnd}
