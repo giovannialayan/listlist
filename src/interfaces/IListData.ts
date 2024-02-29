@@ -5,6 +5,7 @@ interface ListData {
   items: Item[];
   subGroups: { group: string; subGroup: string }[];
   properties: string[];
+  groupSizes: number[];
 }
 
 export default ListData;

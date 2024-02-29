@@ -1,16 +1,19 @@
 import Button from 'react-bootstrap/Button';
 import '../styles/ListControls.css';
 import { useState } from 'react';
+import ItemProperty from '../interfaces/IItemProperty';
 import AddControl from './AddControl';
+import AddItemControl from './AddItemControl';
 
 interface Props {
   groups: string[];
+  properties: string[];
   addGroup: (groupName: string) => void;
-  addItem: (itemName: string, itemGroups: string[]) => void;
+  addItem: (itemName: string, itemGroups: string[], itemProperties: ItemProperty[]) => void;
   addProperty: (propertyName: string) => void;
 }
 
-function ListControls({ groups, addGroup, addItem, addProperty }: Props) {
+function ListControls({ groups, properties, addGroup, addItem, addProperty }: Props) {
   const [groupAddMode, setGroupAddMode] = useState(false);
   const [itemAddMode, setItemAddMode] = useState(false);
   const [propertyAddMode, setPropertyAddMode] = useState(false);
@@ -33,7 +36,7 @@ function ListControls({ groups, addGroup, addItem, addProperty }: Props) {
             </AddControl>
           </>
         )}
-        {!groupAddMode && (
+        {!groupAddMode && !itemAddMode && !propertyAddMode && (
           <>
             <Button
               onClick={() => {
@@ -61,7 +64,7 @@ function ListControls({ groups, addGroup, addItem, addProperty }: Props) {
             </AddControl>
           </>
         )}
-        {!propertyAddMode && (
+        {!groupAddMode && !itemAddMode && !propertyAddMode && (
           <>
             <Button
               onClick={() => {
@@ -75,24 +78,16 @@ function ListControls({ groups, addGroup, addItem, addProperty }: Props) {
       </div>
       <div>
         {itemAddMode && (
-          <>
-            <AddControl
-              onSubmit={(data) => {
-                addItem(data.text, data.selections);
-                setItemAddMode(false);
-              }}
-              onCancel={() => {
-                setItemAddMode(false);
-              }}
-              dropdownOptions={groups.map((group, index) => {
-                return { id: index, label: group, default: index == 0 };
-              })}
-            >
-              Add Item
-            </AddControl>
-          </>
+          <AddItemControl
+            groups={groups}
+            properties={properties}
+            addItem={addItem}
+            onCancel={() => {
+              setItemAddMode(false);
+            }}
+          ></AddItemControl>
         )}
-        {!itemAddMode && (
+        {!groupAddMode && !itemAddMode && !propertyAddMode && (
           <>
             <Button
               onClick={() => {

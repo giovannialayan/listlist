@@ -5,11 +5,11 @@ import ListControls from './components/ListControls';
 import ListTitle from './components/ListTitle';
 import ListData from './interfaces/IListData';
 import Item from './interfaces/IItem';
+import ItemProperty from './interfaces/IItemProperty';
 import { groupPositionSort } from './utils';
 
 function App() {
   const initData: ListData = {
-    groups: ['Default', 'a', 'b', 'c'],
     items: [
       {
         name: 'first',
@@ -51,8 +51,10 @@ function App() {
         ],
       },
     ],
+    groups: ['Default', 'a', 'b', 'c'],
     subGroups: [],
     properties: ['notes', 'prop'],
+    groupSizes: [3, 1, 1, 1],
   };
 
   const [listTitle, setListTitle] = useState('title');
@@ -61,23 +63,47 @@ function App() {
 
   const addGroup = (groupName: string) => {
     listData.groups.push(groupName);
-    setListData({ groups: listData.groups, items: listData.items, subGroups: listData.subGroups, properties: listData.properties });
+    setListData({
+      groups: listData.groups,
+      items: listData.items,
+      subGroups: listData.subGroups,
+      properties: listData.properties,
+      groupSizes: listData.groupSizes,
+    });
   };
 
-  const addItem = (itemName: string, itemGroups: string[]) => {
+  const addItem = (itemName: string, itemGroups: string[], itemProperties: ItemProperty[]) => {
     listData.items.push({
       name: itemName,
-      id: listData.items.length - 1,
+      id: listData.items.length,
       groups: itemGroups,
-      groupPositions: new Map(itemGroups.map((group) => [group, 0])),
-      properties: [],
+      groupPositions: new Map(
+        itemGroups.map((group) => {
+          const lastIndex = listData.groupSizes[listData.groups.indexOf(group)];
+          listData.groupSizes[listData.groups.indexOf(group)]++;
+          return [group, lastIndex];
+        })
+      ),
+      properties: itemProperties,
     });
-    setListData({ groups: listData.groups, items: listData.items, subGroups: listData.subGroups, properties: listData.properties });
+    setListData({
+      groups: listData.groups,
+      items: listData.items,
+      subGroups: listData.subGroups,
+      properties: listData.properties,
+      groupSizes: listData.groupSizes,
+    });
   };
 
   const addProperty = (propertyName: string) => {
     listData.properties.push(propertyName);
-    setListData({ groups: listData.groups, items: listData.items, subGroups: listData.subGroups, properties: listData.properties });
+    setListData({
+      groups: listData.groups,
+      items: listData.items,
+      subGroups: listData.subGroups,
+      properties: listData.properties,
+      groupSizes: listData.groupSizes,
+    });
   };
 
   const editGroupPos = (item: Item, group: string, prevPos: number, newPos: number) => {
@@ -92,14 +118,26 @@ function App() {
       itemsInGroup[i].groupPositions.set(group, i);
     }
 
-    setListData({ groups: listData.groups, items: listData.items, subGroups: listData.subGroups, properties: listData.properties });
+    setListData({
+      groups: listData.groups,
+      items: listData.items,
+      subGroups: listData.subGroups,
+      properties: listData.properties,
+      groupSizes: listData.groupSizes,
+    });
   };
 
   const editItem = (item: Item, editedItem: Item) => {
     const itemIndex = listData.items.indexOf(item);
     listData.items[itemIndex] = editedItem;
 
-    setListData({ groups: listData.groups, items: listData.items, subGroups: listData.subGroups, properties: listData.properties });
+    setListData({
+      groups: listData.groups,
+      items: listData.items,
+      subGroups: listData.subGroups,
+      properties: listData.properties,
+      groupSizes: listData.groupSizes,
+    });
   };
 
   //remove item note: keep item.id same as index in listdata.items
@@ -107,7 +145,13 @@ function App() {
   return (
     <>
       <ListTitle editTitle={setListTitle}>{listTitle}</ListTitle>
-      <ListControls groups={listData.groups} addGroup={addGroup} addItem={addItem} addProperty={addProperty}></ListControls>
+      <ListControls
+        groups={listData.groups}
+        addGroup={addGroup}
+        properties={listData.properties}
+        addItem={addItem}
+        addProperty={addProperty}
+      ></ListControls>
       <ListGroup listData={listData} editGroupPos={editGroupPos} editItem={editItem}></ListGroup>
     </>
   );

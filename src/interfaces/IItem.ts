@@ -1,9 +1,11 @@
+import ItemProperty from './IItemProperty';
+
 interface Item {
   name: string;
   id: number;
   groups: string[];
   groupPositions: Map<string, number>;
-  properties: { name: string; data: string }[];
+  properties: ItemProperty[];
 }
 
 export default Item;

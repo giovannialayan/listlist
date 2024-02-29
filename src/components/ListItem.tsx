@@ -20,19 +20,19 @@ function ListItem({ item, parentGroup, editItem, onDragStart, onDragEnter, onDra
   const [editMode, setEditMode] = useState(false);
 
   return (
-    <li className={'list-group-item listItem' + (dragOver ? ' dragOver' : '')}>
+    <li
+      className={'list-group-item listItem' + (dragOver ? ' dragOver' : '')}
+      onDragStart={() => onDragStart(item, parentGroup)}
+      onDragEnter={() => onDragEnter(item, parentGroup)}
+      onDragEnd={onDragEnd}
+      onDragOver={(e) => e.preventDefault()}
+    >
       <div className='itemTop'>
-        <div
-          draggable
-          onDragStart={() => onDragStart(item, parentGroup)}
-          onDragEnter={() => onDragEnter(item, parentGroup)}
-          onDragEnd={onDragEnd}
-          onDragOver={(e) => e.preventDefault()}
-        >
+        <div draggable>
           <MdDragHandle />
         </div>
         <div>
-          {!editMode && item.name}
+          {!editMode && `${item.groupPositions.get(parentGroup) + '. '}${item.name}`}
           {editMode && (
             <input
               value={item.name}

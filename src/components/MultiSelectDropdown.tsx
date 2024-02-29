@@ -4,9 +4,10 @@ import { Form } from 'react-bootstrap';
 interface Props {
   options: { id: number; label: string; default: boolean }[];
   onChange: (selections: string[]) => void;
+  children?: string;
 }
 
-function MultiSelectDropdown({ options, onChange }: Props) {
+function MultiSelectDropdown({ options, onChange, children = 'Select Options' }: Props) {
   const getInitialSelected = (): number[] => {
     const defaultOptions = options.filter((option) => {
       return option.default;
@@ -46,7 +47,7 @@ function MultiSelectDropdown({ options, onChange }: Props) {
           setIsOpen(!isOpen);
         }}
       >
-        Select Options
+        {children}
       </button>
       <div className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby='multiSelectDropdown'>
         {options.map((option) => (

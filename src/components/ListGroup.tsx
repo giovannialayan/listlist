@@ -31,7 +31,7 @@ function ListGroup({ listData, editGroupPos, editItem }: Props) {
   const onDragEnd = () => {
     const dropPos = dragOverItem.groupPositions.get(dropGroup);
     const dragPos = draggingItem.groupPositions.get(dropGroup);
-    console.log(draggingItem, dragOverItem, dropPos);
+
     if (dropPos !== undefined && dragPos !== undefined) {
       editGroupPos(draggingItem, dropGroup, dragPos, dropPos);
       setDragOverItem({} as Item);
