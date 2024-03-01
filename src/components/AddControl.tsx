@@ -6,15 +6,15 @@ import MultiSelectDropdown from './MultiSelectDropdown';
 interface Props {
   children: string;
   dropdownOptions?: { id: number; label: string; default: boolean }[];
-  onSubmit: (data: { text: string; selections: string[] }) => void;
+  onSubmit: (data: { text: string; selections: number[] }) => void;
   onCancel: () => void;
 }
 
 function AddControl({ children, dropdownOptions = [], onSubmit, onCancel }: Props) {
   const [inputText, setInputText] = useState('');
-  const [dropdownSelections, setDropdownSelections] = useState([] as string[]);
+  const [dropdownSelections, setDropdownSelections] = useState([] as number[]);
 
-  const handleSubmit = (text: string, selections: string[]) => {
+  const handleSubmit = (text: string, selections: number[]) => {
     if (text.trim() !== '') {
       onSubmit({ text, selections });
       setInputText('');

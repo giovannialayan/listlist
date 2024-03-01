@@ -3,8 +3,8 @@ import ItemProperty from './IItemProperty';
 interface Item {
   name: string;
   id: number;
-  groups: string[];
-  groupPositions: Map<string, number>;
+  groups: number[];
+  groupPositions: Map<number, number>;
   properties: ItemProperty[];
 }
 

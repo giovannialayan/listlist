@@ -7,10 +7,10 @@ import { MdEdit } from 'react-icons/md';
 
 interface Props {
   item: Item;
-  parentGroup: string;
+  parentGroup: number;
   editItem: (item: Item, editedItem: Item) => void;
-  onDragStart: (item: Item, parentGroup: string) => void;
-  onDragEnter: (item: Item, parentGroup: string) => void;
+  onDragStart: (item: Item, parentGroup: number) => void;
+  onDragEnter: (item: Item, parentGroup: number) => void;
   onDragEnd: () => void;
   dragOver: boolean;
 }

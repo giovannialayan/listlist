@@ -2,14 +2,15 @@ import Button from 'react-bootstrap/Button';
 import '../styles/ListControls.css';
 import { useState } from 'react';
 import ItemProperty from '../interfaces/IItemProperty';
+import Group from '../interfaces/IGroup';
 import AddControl from './AddControl';
 import AddItemControl from './AddItemControl';
 
 interface Props {
-  groups: string[];
+  groups: Group[];
   properties: string[];
   addGroup: (groupName: string) => void;
-  addItem: (itemName: string, itemGroups: string[], itemProperties: ItemProperty[]) => void;
+  addItem: (itemName: string, itemGroups: number[], itemProperties: ItemProperty[]) => void;
   addProperty: (propertyName: string) => void;
 }
 

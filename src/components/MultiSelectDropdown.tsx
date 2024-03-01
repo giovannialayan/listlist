@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap';
 
 interface Props {
   options: { id: number; label: string; default: boolean }[];
-  onChange: (selections: string[]) => void;
+  onChange: (selections: number[]) => void;
   children?: string;
 }
 
@@ -32,9 +32,7 @@ function MultiSelectDropdown({ options, onChange, children = 'Select Options' }:
 
     setSelectedOptions(tempSelectedOptions);
 
-    let selections = options.filter((option) => tempSelectedOptions.includes(option.id)).map((option) => option.label);
-
-    onChange(selections);
+    onChange([...tempSelectedOptions]);
   };
 
   return (
@@ -52,7 +50,6 @@ function MultiSelectDropdown({ options, onChange, children = 'Select Options' }:
       <div className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby='multiSelectDropdown'>
         {options.map((option) => (
           <Form.Check
-            // disabled={option.default}
             key={option.id}
             type='checkbox'
             id={`option_${option.id}`}

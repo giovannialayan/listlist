@@ -3,17 +3,18 @@ import { Button } from 'react-bootstrap';
 import { MdCancel } from 'react-icons/md';
 import ItemProperty from '../interfaces/IItemProperty';
 import MultiSelectDropdown from './MultiSelectDropdown';
+import Group from '../interfaces/IGroup';
 
 interface Props {
-  groups: string[];
+  groups: Group[];
   properties: string[];
-  addItem: (itemName: string, itemGroups: string[], itemProperties: ItemProperty[]) => void;
+  addItem: (itemName: string, itemGroups: number[], itemProperties: ItemProperty[]) => void;
   onCancel: () => void;
 }
 
 function AddItemControl({ groups, properties, addItem, onCancel }: Props) {
   const [inputName, setInputName] = useState('');
-  const [groupSelections, setGroupSelections] = useState([] as string[]);
+  const [groupSelections, setGroupSelections] = useState([] as number[]);
   const [inputProperties, setInputProperties] = useState(Array(properties.length).fill(''));
 
   const handleSubmit = () => {
@@ -43,8 +44,8 @@ function AddItemControl({ groups, properties, addItem, onCancel }: Props) {
       </a>
       <input type='text' value={inputName} onChange={(e) => setInputName(e.currentTarget.value)}></input>
       <MultiSelectDropdown
-        options={groups.map((group, index) => {
-          return { id: index, label: group, default: index == 0 };
+        options={groups.map((group) => {
+          return { id: group.id, label: group.name, default: group.id == 0 };
         })}
         onChange={setGroupSelections}
       >

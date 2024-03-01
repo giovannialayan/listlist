@@ -14,10 +14,10 @@ function App() {
       {
         name: 'first',
         id: 0,
-        groups: ['Default', 'a'],
+        groups: [0, 1],
         groupPositions: new Map([
-          ['Default', 0],
-          ['a', 0],
+          [0, 0],
+          [1, 0],
         ]),
         properties: [
           { name: 'notes', data: 'no' },
@@ -27,10 +27,10 @@ function App() {
       {
         name: 'second',
         id: 1,
-        groups: ['Default', 'b'],
+        groups: [0, 2],
         groupPositions: new Map([
-          ['Default', 1],
-          ['b', 0],
+          [0, 1],
+          [2, 0],
         ]),
         properties: [
           { name: 'notes', data: '' },
@@ -40,10 +40,10 @@ function App() {
       {
         name: 'third',
         id: 2,
-        groups: ['Default', 'c'],
+        groups: [0, 3],
         groupPositions: new Map([
-          ['Default', 2],
-          ['c', 0],
+          [0, 2],
+          [3, 0],
         ]),
         properties: [
           { name: 'notes', data: '' },
@@ -51,10 +51,13 @@ function App() {
         ],
       },
     ],
-    groups: ['Default', 'a', 'b', 'c'],
-    subGroups: [],
     properties: ['notes', 'prop'],
-    groupSizes: [3, 1, 1, 1],
+    groups: [
+      { name: 'Default', id: 0, subGroups: [], size: 3, parent: -1 },
+      { name: 'a', id: 1, subGroups: [2], size: 1, parent: -1 },
+      { name: 'b', id: 2, subGroups: [], size: 1, parent: 1 },
+      { name: 'c', id: 3, subGroups: [], size: 1, parent: -1 },
+    ],
   };
 
   const [listTitle, setListTitle] = useState('title');
@@ -62,68 +65,61 @@ function App() {
   const [listData, setListData] = useState(initData);
 
   const addGroup = (groupName: string) => {
-    listData.groups.push(groupName);
+    listData.groups.push({ name: groupName, id: listData.groups.length, subGroups: [], size: 0, parent: -1 });
     setListData({
-      groups: listData.groups,
       items: listData.items,
-      subGroups: listData.subGroups,
       properties: listData.properties,
-      groupSizes: listData.groupSizes,
+      groups: listData.groups,
     });
   };
 
-  const addItem = (itemName: string, itemGroups: string[], itemProperties: ItemProperty[]) => {
+  const addItem = (itemName: string, itemGroups: number[], itemProperties: ItemProperty[]) => {
     listData.items.push({
       name: itemName,
       id: listData.items.length,
       groups: itemGroups,
       groupPositions: new Map(
-        itemGroups.map((group) => {
-          const lastIndex = listData.groupSizes[listData.groups.indexOf(group)];
-          listData.groupSizes[listData.groups.indexOf(group)]++;
-          return [group, lastIndex];
+        itemGroups.map((itemGroup) => {
+          // const groupIndex = listData.groups.findIndex((group) => group.name === itemGroup);
+          const lastIndex = listData.groups[itemGroup].size;
+          listData.groups[itemGroup].size++;
+          return [itemGroup, lastIndex];
         })
       ),
       properties: itemProperties,
     });
     setListData({
-      groups: listData.groups,
       items: listData.items,
-      subGroups: listData.subGroups,
       properties: listData.properties,
-      groupSizes: listData.groupSizes,
+      groups: listData.groups,
     });
   };
 
   const addProperty = (propertyName: string) => {
     listData.properties.push(propertyName);
     setListData({
-      groups: listData.groups,
       items: listData.items,
-      subGroups: listData.subGroups,
       properties: listData.properties,
-      groupSizes: listData.groupSizes,
+      groups: listData.groups,
     });
   };
 
-  const editGroupPos = (item: Item, group: string, prevPos: number, newPos: number) => {
-    let itemsInGroup = listData.items.filter((item) => item.groups.includes(group));
+  const editGroupPos = (item: Item, groupId: number, prevPos: number, newPos: number) => {
+    let itemsInGroup = listData.items.filter((item) => item.groups.includes(groupId));
 
-    itemsInGroup.sort((a, b) => groupPositionSort(a, b, group));
+    itemsInGroup.sort((a, b) => groupPositionSort(a, b, groupId));
 
     itemsInGroup.splice(prevPos, 1);
     itemsInGroup.splice(newPos, 0, item);
 
     for (let i = 0; i < itemsInGroup.length; i++) {
-      itemsInGroup[i].groupPositions.set(group, i);
+      itemsInGroup[i].groupPositions.set(groupId, i);
     }
 
     setListData({
-      groups: listData.groups,
       items: listData.items,
-      subGroups: listData.subGroups,
       properties: listData.properties,
-      groupSizes: listData.groupSizes,
+      groups: listData.groups,
     });
   };
 
@@ -132,11 +128,9 @@ function App() {
     listData.items[itemIndex] = editedItem;
 
     setListData({
-      groups: listData.groups,
       items: listData.items,
-      subGroups: listData.subGroups,
       properties: listData.properties,
-      groupSizes: listData.groupSizes,
+      groups: listData.groups,
     });
   };
 
