@@ -5,11 +5,12 @@ import ItemProperty from '../interfaces/IItemProperty';
 import Group from '../interfaces/IGroup';
 import AddControl from './AddControl';
 import AddItemControl from './AddItemControl';
+import AddGroupControl from './AddGroupControl';
 
 interface Props {
   groups: Group[];
   properties: string[];
-  addGroup: (groupName: string) => void;
+  addGroup: (groupName: string, parentGroup: number) => void;
   addItem: (itemName: string, itemGroups: number[], itemProperties: ItemProperty[]) => void;
   addProperty: (propertyName: string) => void;
 }
@@ -24,17 +25,16 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty }: Pr
       <div>
         {groupAddMode && (
           <>
-            <AddControl
-              onSubmit={(data) => {
-                addGroup(data.text);
+            <AddGroupControl
+              groups={groups}
+              onSubmit={(groupName, parentGroup) => {
+                addGroup(groupName, parentGroup);
                 setGroupAddMode(false);
               }}
               onCancel={() => {
                 setGroupAddMode(false);
               }}
-            >
-              Add Group
-            </AddControl>
+            ></AddGroupControl>
           </>
         )}
         {!groupAddMode && !itemAddMode && !propertyAddMode && (

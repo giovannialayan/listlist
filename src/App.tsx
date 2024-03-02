@@ -64,8 +64,13 @@ function App() {
   // const [listData, setListData] = useState({ groups: ['Default'], items: [] } as ListData);
   const [listData, setListData] = useState(initData);
 
-  const addGroup = (groupName: string) => {
-    listData.groups.push({ name: groupName, id: listData.groups.length, subGroups: [], size: 0, parent: -1 });
+  const addGroup = (groupName: string, parentGroup: number) => {
+    listData.groups.push({ name: groupName, id: listData.groups.length, subGroups: [], size: 0, parent: parentGroup });
+
+    if (parentGroup !== -1) {
+      listData.groups[parentGroup].subGroups.push(listData.groups.length - 1);
+    }
+
     setListData({
       items: listData.items,
       properties: listData.properties,

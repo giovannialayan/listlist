@@ -38,16 +38,16 @@ function ListGroup({ listData, editGroupPos, editItem }: Props) {
       setDragOverItem({} as Item);
     }
   };
-
+  console.log(listData.groups);
   return (
     <div>
       <div>
         <DropdownButton title={`Group: ${currentGroup === '' ? 'All Groups' : currentGroup}`}>
           <Dropdown.Item onClick={() => setCurrentGroup('')}>All Groups</Dropdown.Item>
-          {listData.groups.map((group, index) => {
+          {listData.groups.map((group) => {
             return (
               group.parent === -1 && (
-                <Dropdown.Item key={index} onClick={() => setCurrentGroup(group.name)}>
+                <Dropdown.Item key={group.id} onClick={() => setCurrentGroup(group.name)}>
                   {group.name}
                 </Dropdown.Item>
               )
@@ -89,7 +89,7 @@ function ListGroup({ listData, editGroupPos, editItem }: Props) {
                 {/* start sub group list */}
                 {group.subGroups.map((subGroupId) => {
                   return (
-                    <div key={group.name + listData.groups[subGroupId]} className='subGroup'>
+                    <div key={subGroupId} className='subGroup'>
                       <p>{listData.groups[subGroupId].name}</p>
                       <ul className='list-group list-group-flush'>
                         {[...listData.items]
