@@ -1,6 +1,6 @@
 import './App.css';
 import { useState } from 'react';
-import ListGroup from './components/ListGroup';
+import List from './components/List';
 import ListControls from './components/ListControls';
 import ListTitle from './components/ListTitle';
 import ListData from './interfaces/IListData';
@@ -151,7 +151,7 @@ function App() {
         addItem={addItem}
         addProperty={addProperty}
       ></ListControls>
-      <ListGroup listData={listData} editGroupPos={editGroupPos} editItem={editItem}></ListGroup>
+      <List listData={listData} editGroupPos={editGroupPos} editItem={editItem}></List>
     </>
   );
 }

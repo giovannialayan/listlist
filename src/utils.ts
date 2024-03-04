@@ -1,3 +1,4 @@
+import Group from './interfaces/IGroup';
 import Item from './interfaces/IItem';
 
 const groupPositionSort = (itemA: Item, itemB: Item, group: number) => {
@@ -10,4 +11,18 @@ const groupPositionSort = (itemA: Item, itemB: Item, group: number) => {
   }
 };
 
-export { groupPositionSort };
+const getGroupItems = (items: Item[], groupId: number): Item[] => {
+  return items.filter((item) => item.groups.includes(groupId));
+};
+
+const getSubGroupsAsGroups = (groups: Group[], subGroupIds: number[]) => {
+  const subGroups: Group[] = [];
+
+  for (let i = 0; i < subGroupIds.length; i++) {
+    subGroups.push(groups[subGroupIds[i]]);
+  }
+
+  return subGroups;
+};
+
+export { groupPositionSort, getGroupItems, getSubGroupsAsGroups };
