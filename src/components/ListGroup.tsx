@@ -2,6 +2,9 @@ import { useState } from 'react';
 import ListItem from './ListItem';
 import Item from '../interfaces/IItem';
 import Group from '../interfaces/IGroup';
+import { MdEdit } from 'react-icons/md';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import '../styles/ListGroup.css';
 
 interface Props {
   group: Group;
@@ -16,6 +19,9 @@ function ListGroup({ group, subGroups, items, subGroupItems, editItem, editGroup
   const [dropGroup, setDropGroup] = useState(-1);
   const [draggingItem, setDraggingItem] = useState({} as Item);
   const [dragOverItem, setDragOverItem] = useState({} as Item);
+
+  const [editModes, setEditModes] = useState(Array(subGroups.length + 1).fill(false));
+  const [showGroup, setShowGroup] = useState(Array(subGroups.length + 1).fill(true));
 
   const onDragStart = (item: Item, parentGroup: number) => {
     setDraggingItem(item);
@@ -40,10 +46,48 @@ function ListGroup({ group, subGroups, items, subGroupItems, editItem, editGroup
 
   return (
     <div className='group'>
-      <h5>{group.name}</h5>
+      <div className='groupTop'>
+        <h5>{group.name}</h5>
+        <a
+          onClick={() => {
+            setShowGroup(
+              showGroup.map((show, index) => {
+                if (index === 0) {
+                  return !show;
+                } else {
+                  return show;
+                }
+              })
+            );
+          }}
+        >
+          {!showGroup[0] && <IoIosArrowDown />}
+          {showGroup[0] && <IoIosArrowUp />}
+        </a>
+        <a
+          onClick={() => {
+            setEditModes(
+              editModes.map((mode, index) => {
+                if (index === 0) {
+                  return !mode;
+                } else {
+                  mode;
+                }
+              })
+            );
+          }}
+        >
+          <MdEdit />
+        </a>
+      </div>
+      <div className={editModes[0] ? '' : 'collapse'}>
+        <p>show numbers</p>
+        <p>sort by (dropdown property) (dropdown alphabetically) (sort button)</p>
+        <p>(checkbox) auto sort</p>
+      </div>
       {/* start group list */}
       {group.size !== 0 && (
-        <ul className='list-group list-group-flush'>
+        <ul className={'list-group list-group-flush' + (showGroup[0] ? '' : ' collapse')}>
           {items.map((item) => {
             return (
               <ListItem
@@ -65,9 +109,47 @@ function ListGroup({ group, subGroups, items, subGroupItems, editItem, editGroup
       {subGroups.map((subGroup, index) => {
         return (
           <div key={subGroup.id} className='subGroup'>
-            <p>{subGroup.name}</p>
+            <div className='groupTop'>
+              <p>{subGroup.name}</p>
+              <a
+                onClick={() => {
+                  setShowGroup(
+                    showGroup.map((show, jindex) => {
+                      if (jindex === index + 1) {
+                        return !show;
+                      } else {
+                        return show;
+                      }
+                    })
+                  );
+                }}
+              >
+                {!showGroup[index + 1] && <IoIosArrowDown />}
+                {showGroup[index + 1] && <IoIosArrowUp />}
+              </a>
+              <a
+                onClick={() => {
+                  setEditModes(
+                    editModes.map((mode, jindex) => {
+                      if (jindex === index + 1) {
+                        return !mode;
+                      } else {
+                        mode;
+                      }
+                    })
+                  );
+                }}
+              >
+                <MdEdit />
+              </a>
+            </div>
+            <div className={editModes[index + 1] ? '' : 'collapse'}>
+              <p>show numbers</p>
+              <p>sort by (dropdown property) (dropdown alphabetically) (sort button)</p>
+              <p>(checkbox) auto sort</p>
+            </div>
             {subGroup.size !== 0 && (
-              <ul className='list-group list-group-flush'>
+              <ul className={'list-group list-group-flush' + (showGroup[index + 1] ? '' : ' collapse')}>
                 {subGroupItems[index].map((item) => {
                   return (
                     <ListItem
