@@ -3,13 +3,12 @@ import { useState } from 'react';
 import List from './components/List';
 import ListControls from './components/ListControls';
 import ListTitle from './components/ListTitle';
-import ListData from './interfaces/IListData';
-import Item from './interfaces/IItem';
-import ItemProperty from './interfaces/IItemProperty';
+import { ListData, Item, ItemProperty, Group } from './interfaces';
 import { groupPositionSort } from './utils';
 
 function App() {
   const initData: ListData = {
+    title: 'title',
     items: [
       {
         name: 'first',
@@ -59,22 +58,19 @@ function App() {
       { name: 'c', id: 3, subGroups: [], size: 1, parent: -1 },
     ],
   };
-
-  const [listTitle, setListTitle] = useState('title');
   // const [listData, setListData] = useState({ groups: ['Default'], items: [] } as ListData);
   const [listData, setListData] = useState(initData);
 
   const addGroup = (groupName: string, parentGroup: number) => {
-    listData.groups.push({ name: groupName, id: listData.groups.length, subGroups: [], size: 0, parent: parentGroup });
+    const nextGroups = [...listData.groups, { name: groupName, id: listData.groups.length, subGroups: [], size: 0, parent: parentGroup }];
 
     if (parentGroup !== -1) {
-      listData.groups[parentGroup].subGroups.push(listData.groups.length - 1);
+      nextGroups[parentGroup].subGroups.push(nextGroups.length - 1);
     }
 
     setListData({
-      items: listData.items,
-      properties: listData.properties,
-      groups: listData.groups,
+      ...listData,
+      groups: nextGroups,
     });
   };
 
@@ -94,18 +90,16 @@ function App() {
       properties: itemProperties,
     });
     setListData({
+      ...listData,
       items: listData.items,
-      properties: listData.properties,
-      groups: listData.groups,
     });
   };
 
   const addProperty = (propertyName: string) => {
     listData.properties.push(propertyName);
     setListData({
-      items: listData.items,
+      ...listData,
       properties: listData.properties,
-      groups: listData.groups,
     });
   };
 
@@ -122,9 +116,8 @@ function App() {
     }
 
     setListData({
+      ...listData,
       items: listData.items,
-      properties: listData.properties,
-      groups: listData.groups,
     });
   };
 
@@ -133,17 +126,33 @@ function App() {
     listData.items[itemIndex] = editedItem;
 
     setListData({
+      ...listData,
       items: listData.items,
-      properties: listData.properties,
-      groups: listData.groups,
     });
+  };
+
+  const editGroup = (groupId: number, editedGroup: Group) => {
+    setListData({
+      ...listData,
+      groups: listData.groups.map((group) => {
+        if (group.id === groupId) {
+          return editedGroup;
+        } else {
+          return group;
+        }
+      }),
+    });
+  };
+
+  const editTitle = (title: string) => {
+    setListData({ ...listData, title });
   };
 
   //remove item note: keep item.id same as index in listdata.items
 
   return (
     <>
-      <ListTitle editTitle={setListTitle}>{listTitle}</ListTitle>
+      <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
       <ListControls
         groups={listData.groups}
         addGroup={addGroup}
@@ -151,7 +160,7 @@ function App() {
         addItem={addItem}
         addProperty={addProperty}
       ></ListControls>
-      <List listData={listData} editGroupPos={editGroupPos} editItem={editItem}></List>
+      <List listData={listData} editGroupPos={editGroupPos} editItem={editItem} editGroup={editGroup}></List>
     </>
   );
 }

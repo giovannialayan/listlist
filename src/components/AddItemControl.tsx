@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import { MdCancel } from 'react-icons/md';
 import ItemProperty from '../interfaces/IItemProperty';
 import MultiSelectDropdown from './MultiSelectDropdown';
-import Group from '../interfaces/IGroup';
+import { Group } from '../interfaces';
 
 interface Props {
   groups: Group[];
@@ -14,7 +14,7 @@ interface Props {
 
 function AddItemControl({ groups, properties, addItem, onCancel }: Props) {
   const [inputName, setInputName] = useState('');
-  const [groupSelections, setGroupSelections] = useState([] as number[]);
+  const [groupSelections, setGroupSelections] = useState([0]);
   const [inputProperties, setInputProperties] = useState(Array(properties.length).fill(''));
 
   const handleSubmit = () => {

@@ -1,7 +1,6 @@
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useState } from 'react';
-import ListData from '../interfaces/IListData';
-import Item from '../interfaces/IItem';
+import { ListData, Item, Group } from '../interfaces';
 import { getGroupItems, getSubGroupsAsGroups, groupPositionSort } from '../utils';
 import '../styles/ListGroup.css';
 import ListGroup from './ListGroup';
@@ -10,10 +9,36 @@ interface Props {
   listData: ListData;
   editGroupPos: (item: Item, group: number, prevPos: number, newPos: number) => void;
   editItem: (item: Item, editedItem: Item) => void;
+  editGroup: (groupId: number, editedGroup: Group) => void;
 }
 
-function List({ listData, editGroupPos, editItem }: Props) {
+function List({ listData, editGroupPos, editItem, editGroup }: Props) {
   const [currentGroup, setCurrentGroup] = useState('');
+
+  const [dropGroup, setDropGroup] = useState(-1);
+  const [draggingItem, setDraggingItem] = useState({} as Item);
+  const [dragOverItem, setDragOverItem] = useState({} as Item);
+
+  const onDragStart = (item: Item, parentGroup: number) => {
+    setDraggingItem(item);
+    setDropGroup(parentGroup);
+  };
+
+  const onDragEnter = (item: Item, parentGroup: number) => {
+    if (parentGroup === dropGroup) {
+      setDragOverItem(item);
+    }
+  };
+
+  const onDragEnd = () => {
+    const dropPos = dragOverItem.groupPositions.get(dropGroup);
+    const dragPos = draggingItem.groupPositions.get(dropGroup);
+
+    if (dropPos !== undefined && dragPos !== undefined) {
+      editGroupPos(draggingItem, dropGroup, dragPos, dropPos);
+      setDragOverItem({} as Item);
+    }
+  };
 
   return (
     <div>
@@ -45,7 +70,12 @@ function List({ listData, editGroupPos, editItem }: Props) {
                   return getGroupItems(listData.items, subGroupId).sort((a, b) => groupPositionSort(a, b, subGroupId));
                 })}
                 editItem={editItem}
-                editGroupPos={editGroupPos}
+                editGroup={editGroup}
+                onDragStart={onDragStart}
+                onDragEnter={onDragEnter}
+                onDragEnd={onDragEnd}
+                dropGroup={dropGroup}
+                dragOverItem={dragOverItem}
               ></ListGroup>
             )
           );

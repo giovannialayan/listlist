@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdCancel } from 'react-icons/md';
 import '../styles/AddGroupControl.css';
-import Group from '../interfaces/IGroup';
+import { Group } from '../interfaces';
 
 interface Props {
   groups: Group[];
@@ -16,7 +16,9 @@ function AddGroupControl({ groups, onSubmit, onCancel }: Props) {
   const [parentGroup, setParentGroup] = useState(0);
 
   const handleSubmit = () => {
-    onSubmit(groupInput, subGroupsChecked ? parentGroup : -1);
+    if (groupInput.trim() !== '') {
+      onSubmit(groupInput, subGroupsChecked ? parentGroup : -1);
+    }
   };
 
   const handleCancel = () => {

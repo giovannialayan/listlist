@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import ListItem from './ListItem';
-import { Item, Group } from '../interfaces';
-import { MdEdit } from 'react-icons/md';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import { MdEdit } from 'react-icons/md';
+import { Group, Item } from '../interfaces';
 import '../styles/ListGroup.css';
-import ListSubGroup from './ListSubGroup';
+import ListItem from './ListItem';
 
 interface Props {
-  group: Group;
-  subGroups: Group[];
+  subGroup: Group;
   items: Item[];
-  subGroupItems: Item[][];
   dropGroup: number;
   dragOverItem: Item;
   editItem: (item: Item, editedItem: Item) => void;
@@ -20,31 +17,19 @@ interface Props {
   onDragEnd: () => void;
 }
 
-function ListGroup({
-  group,
-  subGroups,
-  items,
-  subGroupItems,
-  dropGroup,
-  dragOverItem,
-  editItem,
-  editGroup,
-  onDragStart,
-  onDragEnter,
-  onDragEnd,
-}: Props) {
+function ListSubGroup({ subGroup, items, dropGroup, dragOverItem, editItem, editGroup, onDragStart, onDragEnter, onDragEnd }: Props) {
   const [editMode, setEditMode] = useState(false);
   const [showGroup, setShowGroup] = useState(true);
 
   return (
-    <div className='group'>
+    <div className='subGroup'>
       <div className='groupTop'>
-        {!editMode && <h5>{group.name}</h5>}
+        {!editMode && <p>{subGroup.name}</p>}
         {editMode && (
           <input
-            value={group.name}
+            value={subGroup.name}
             onChange={(e) => {
-              editGroup(group.id, { ...group, name: e.currentTarget.value });
+              editGroup(subGroup.id, { ...subGroup, name: e.currentTarget.value });
             }}
           ></input>
         )}
@@ -69,42 +54,26 @@ function ListGroup({
         <p>sort by (dropdown property) (dropdown alphabetically) (sort button)</p>
         <p>(checkbox) auto sort</p>
       </div>
-      {group.size !== 0 && (
+      {subGroup.size !== 0 && (
         <ul className={'list-group list-group-flush' + (showGroup ? '' : ' collapse')}>
           {items.map((item) => {
             return (
               <ListItem
                 key={item.id}
                 item={item}
-                parentGroup={group.id}
+                parentGroup={subGroup.id}
                 editItem={editItem}
                 onDragStart={onDragStart}
                 onDragEnter={onDragEnter}
                 onDragEnd={onDragEnd}
-                dragOver={group.id === dropGroup && item == dragOverItem}
+                dragOver={subGroup.id === dropGroup && item == dragOverItem}
               ></ListItem>
             );
           })}
         </ul>
       )}
-      {subGroups.map((subGroup, index) => {
-        return (
-          <ListSubGroup
-            key={subGroup.id}
-            subGroup={subGroup}
-            items={subGroupItems[index]}
-            dropGroup={dropGroup}
-            dragOverItem={dragOverItem}
-            editGroup={editGroup}
-            editItem={editItem}
-            onDragStart={onDragStart}
-            onDragEnter={onDragEnter}
-            onDragEnd={onDragEnd}
-          ></ListSubGroup>
-        );
-      })}
     </div>
   );
 }
 
-export default ListGroup;
+export default ListSubGroup;

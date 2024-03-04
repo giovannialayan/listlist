@@ -1,5 +1,5 @@
 import { MdDragHandle } from 'react-icons/md';
-import Item from '../interfaces/IItem';
+import { Item } from '../interfaces';
 import '../styles/ListItem.css';
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
@@ -38,11 +38,8 @@ function ListItem({ item, parentGroup, editItem, onDragStart, onDragEnter, onDra
               value={item.name}
               onChange={(e) => {
                 editItem(item, {
+                  ...item,
                   name: e.currentTarget.value,
-                  id: item.id,
-                  groups: item.groups,
-                  groupPositions: item.groupPositions,
-                  properties: item.properties,
                 });
               }}
             ></input>
@@ -89,15 +86,15 @@ function ListItem({ item, parentGroup, editItem, onDragStart, onDragEnter, onDra
               <input
                 value={property.data}
                 onChange={(e) => {
-                  const newProperties = item.properties.map((prop, jindex) => {
-                    return { name: prop.name, data: jindex === index ? e.currentTarget.value : prop.data };
-                  });
                   editItem(item, {
-                    name: item.name,
-                    id: item.id,
-                    groups: item.groups,
-                    groupPositions: item.groupPositions,
-                    properties: newProperties,
+                    ...item,
+                    properties: item.properties.map((prop, jindex) => {
+                      if (jindex === index) {
+                        return { ...prop, data: e.currentTarget.value };
+                      } else {
+                        return prop;
+                      }
+                    }),
                   });
                 }}
               ></input>
