@@ -4,6 +4,7 @@ interface Group {
   subGroups: number[];
   size: number;
   parent: number;
+  position: number;
 }
 
 export default Group;

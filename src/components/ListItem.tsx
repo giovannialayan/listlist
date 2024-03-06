@@ -8,10 +8,10 @@ import { MdEdit } from 'react-icons/md';
 interface Props {
   item: Item;
   parentGroup: number;
-  editItem: (item: Item, editedItem: Item) => void;
-  onDragStart: (item: Item, parentGroup: number) => void;
-  onDragEnter: (item: Item, parentGroup: number) => void;
-  onDragEnd: () => void;
+  editItem: (item: number, editedItem: Item) => void;
+  onDragStart: (item: Item, parentGroup: number, event: React.DragEvent) => void;
+  onDragEnter: (item: Item, parentGroup: number, event: React.DragEvent) => void;
+  onDragEnd: (event: React.DragEvent) => void;
   dragOver: boolean;
 }
 
@@ -22,8 +22,12 @@ function ListItem({ item, parentGroup, editItem, onDragStart, onDragEnter, onDra
   return (
     <li
       className={'list-group-item listItem' + (dragOver ? ' dragOver' : '')}
-      onDragStart={() => onDragStart(item, parentGroup)}
-      onDragEnter={() => onDragEnter(item, parentGroup)}
+      onDragStart={(e) => {
+        onDragStart(item, parentGroup, e);
+      }}
+      onDragEnter={(e) => {
+        onDragEnter(item, parentGroup, e);
+      }}
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
@@ -37,7 +41,7 @@ function ListItem({ item, parentGroup, editItem, onDragStart, onDragEnter, onDra
             <input
               value={item.name}
               onChange={(e) => {
-                editItem(item, {
+                editItem(item.id, {
                   ...item,
                   name: e.currentTarget.value,
                 });
@@ -86,7 +90,7 @@ function ListItem({ item, parentGroup, editItem, onDragStart, onDragEnter, onDra
               <input
                 value={property.data}
                 onChange={(e) => {
-                  editItem(item, {
+                  editItem(item.id, {
                     ...item,
                     properties: item.properties.map((prop, jindex) => {
                       if (jindex === index) {

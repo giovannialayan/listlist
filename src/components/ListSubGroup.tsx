@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { MdEdit } from 'react-icons/md';
+import { MdDragHandle, MdEdit } from 'react-icons/md';
 import { Group, Item } from '../interfaces';
 import '../styles/ListGroup.css';
 import ListItem from './ListItem';
@@ -10,20 +10,47 @@ interface Props {
   items: Item[];
   dropGroup: number;
   dragOverItem: Item;
-  editItem: (item: Item, editedItem: Item) => void;
+  groupDragOver: boolean;
+  editItem: (item: number, editedItem: Item) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
-  onDragStart: (item: Item, parentGroup: number) => void;
-  onDragEnter: (item: Item, parentGroup: number) => void;
-  onDragEnd: () => void;
+  onItemDragStart: (item: Item, parentGroup: number, event: React.DragEvent) => void;
+  onItemDragEnter: (item: Item, parentGroup: number, event: React.DragEvent) => void;
+  onItemDragEnd: (event: React.DragEvent) => void;
+  onGroupDragStart: (groupId: number, parentGroup: number, event: React.DragEvent) => void;
+  onGroupDragEnter: (groupId: number, parentGroup: number, event: React.DragEvent) => void;
+  onGroupDragEnd: (event: React.DragEvent) => void;
 }
 
-function ListSubGroup({ subGroup, items, dropGroup, dragOverItem, editItem, editGroup, onDragStart, onDragEnter, onDragEnd }: Props) {
+function ListSubGroup({
+  subGroup,
+  items,
+  dropGroup,
+  dragOverItem,
+  groupDragOver,
+  editItem,
+  editGroup,
+  onItemDragStart,
+  onItemDragEnter,
+  onItemDragEnd,
+  onGroupDragStart,
+  onGroupDragEnter,
+  onGroupDragEnd,
+}: Props) {
   const [editMode, setEditMode] = useState(false);
   const [showGroup, setShowGroup] = useState(true);
 
   return (
-    <div className='subGroup'>
+    <div
+      className={'subGroup' + (groupDragOver ? ' groupDragOver' : '')}
+      onDragStart={(e) => onGroupDragStart(subGroup.id, subGroup.parent, e)}
+      onDragEnter={(e) => onGroupDragEnter(subGroup.id, subGroup.parent, e)}
+      onDragEnd={onGroupDragEnd}
+      onDragOver={(e) => e.preventDefault()}
+    >
       <div className='groupTop'>
+        <div draggable>
+          <MdDragHandle />
+        </div>
         {!editMode && <p>{subGroup.name}</p>}
         {editMode && (
           <input
@@ -63,9 +90,9 @@ function ListSubGroup({ subGroup, items, dropGroup, dragOverItem, editItem, edit
                 item={item}
                 parentGroup={subGroup.id}
                 editItem={editItem}
-                onDragStart={onDragStart}
-                onDragEnter={onDragEnter}
-                onDragEnd={onDragEnd}
+                onDragStart={onItemDragStart}
+                onDragEnter={onItemDragEnter}
+                onDragEnd={onItemDragEnd}
                 dragOver={subGroup.id === dropGroup && item == dragOverItem}
               ></ListItem>
             );

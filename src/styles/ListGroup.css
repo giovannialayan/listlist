@@ -11,3 +11,7 @@
   flex-flow: row nowrap;
   justify-content: center;
 }
+
+.groupDragOver {
+  border: 1px solid gray;
+}

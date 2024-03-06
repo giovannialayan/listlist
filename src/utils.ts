@@ -1,7 +1,7 @@
 import Group from './interfaces/IGroup';
 import Item from './interfaces/IItem';
 
-const groupPositionSort = (itemA: Item, itemB: Item, group: number) => {
+const itemPositionSort = (itemA: Item, itemB: Item, group: number) => {
   const aPos = itemA.groupPositions.get(group);
   const bPos = itemB.groupPositions.get(group);
   if (aPos !== undefined && bPos !== undefined) {
@@ -25,4 +25,28 @@ const getSubGroupsAsGroups = (groups: Group[], subGroupIds: number[]) => {
   return subGroups;
 };
 
-export { groupPositionSort, getGroupItems, getSubGroupsAsGroups };
+const getNumParentGroups = (groups: Group[]) => {
+  let numGroups = 0;
+  groups.map((group) => {
+    if (group.parent === -1) {
+      numGroups++;
+    }
+  });
+  return numGroups;
+};
+
+const getParentGroups = (groups: Group[]) => {
+  const parentGroups: Group[] = [];
+  groups.map((group) => {
+    if (group.parent === -1) {
+      parentGroups.push(group);
+    }
+  });
+  return parentGroups;
+};
+
+const groupPositionSort = (groupA: Group, groupB: Group) => {
+  return groupA.position - groupB.position;
+};
+
+export { itemPositionSort, getGroupItems, getSubGroupsAsGroups, getNumParentGroups, getParentGroups, groupPositionSort };
