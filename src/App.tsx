@@ -87,7 +87,7 @@ function App() {
         size: 3,
         parent: -1,
         position: 0,
-        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true, collapse: false },
       },
       {
         name: 'a',
@@ -96,7 +96,7 @@ function App() {
         size: 1,
         parent: -1,
         position: 1,
-        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true, collapse: false },
       },
       {
         name: 'b',
@@ -105,7 +105,7 @@ function App() {
         size: 1,
         parent: 1,
         position: 0,
-        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true, collapse: false },
       },
       {
         name: 'c',
@@ -114,7 +114,7 @@ function App() {
         size: 1,
         parent: -1,
         position: 2,
-        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true, collapse: false },
       },
       {
         name: 'b2',
@@ -123,7 +123,7 @@ function App() {
         size: 1,
         parent: 1,
         position: 1,
-        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true, collapse: false },
       },
       {
         name: 'b3',
@@ -132,7 +132,7 @@ function App() {
         size: 1,
         parent: 1,
         position: 2,
-        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true, collapse: false },
       },
     ],
   };
@@ -147,7 +147,7 @@ function App() {
       size: 0,
       parent: parentGroup,
       position: getNumParentGroups(listData.groups),
-      settings: { numbered: false, autoSort: false, sortByProperty: '', sortAscending: true },
+      settings: { numbered: false, autoSort: false, sortByProperty: '', sortAscending: true, collapse: false },
     };
 
     const nextGroups = [...listData.groups, newGroup];

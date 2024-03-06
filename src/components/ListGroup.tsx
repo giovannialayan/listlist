@@ -51,7 +51,6 @@ function ListGroup({
   onGroupDragEnd,
 }: Props) {
   const [editMode, setEditMode] = useState(false);
-  const [showGroup, setShowGroup] = useState(true);
 
   return (
     <div
@@ -76,11 +75,11 @@ function ListGroup({
         )}
         <a
           onClick={() => {
-            setShowGroup(!showGroup);
+            editGroupSettings(group.id, { ...group.settings, collapse: !group.settings.collapse });
           }}
         >
-          {!showGroup && <IoIosArrowDown />}
-          {showGroup && <IoIosArrowUp />}
+          {group.settings.collapse && <IoIosArrowDown />}
+          {!group.settings.collapse && <IoIosArrowUp />}
         </a>
         <a
           onClick={() => {
@@ -99,7 +98,7 @@ function ListGroup({
           sortItems={sortItems}
         ></ListGroupSettings>
       </div>
-      <div className={showGroup ? '' : ' collapse'}>
+      <div className={group.settings.collapse ? ' collapse' : ''}>
         {group.size !== 0 && (
           <ul className={'list-group list-group-flush'}>
             {items.map((item) => {
@@ -125,10 +124,13 @@ function ListGroup({
               key={subGroup.id}
               subGroup={subGroup}
               items={subGroupItems[subGroup.id]}
+              properties={properties}
               dropGroup={dropGroup}
               dragOverItem={dragOverItem}
               editGroup={editGroup}
               editItem={editItem}
+              editGroupSettings={editGroupSettings}
+              sortItems={sortItems}
               onItemDragStart={onItemDragStart}
               onItemDragEnter={onItemDragEnter}
               onItemDragEnd={onItemDragEnd}

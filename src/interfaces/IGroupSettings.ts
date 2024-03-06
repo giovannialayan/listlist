@@ -3,6 +3,7 @@ interface GroupSettings {
   autoSort: boolean;
   sortByProperty: string;
   sortAscending: boolean;
+  collapse: boolean;
 }
 
 export default GroupSettings;

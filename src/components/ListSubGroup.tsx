@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { MdDragHandle, MdEdit } from 'react-icons/md';
-import { Group, Item } from '../interfaces';
+import { Group, Item, GroupSettings } from '../interfaces';
 import '../styles/ListGroup.css';
 import ListItem from './ListItem';
+import ListGroupSettings from './ListGroupSettings';
 
 interface Props {
   subGroup: Group;
   items: Item[];
+  properties: string[];
   dropGroup: number;
   dragOverItem: Item;
   groupDragOver: boolean;
   editItem: (item: number, editedItem: Item) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
+  editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
+  sortItems: (groupId: number) => void;
   onItemDragStart: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onItemDragEnter: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onItemDragEnd: (event: React.DragEvent) => void;
@@ -24,11 +28,14 @@ interface Props {
 function ListSubGroup({
   subGroup,
   items,
+  properties,
   dropGroup,
   dragOverItem,
   groupDragOver,
   editItem,
   editGroup,
+  editGroupSettings,
+  sortItems,
   onItemDragStart,
   onItemDragEnter,
   onItemDragEnd,
@@ -37,7 +44,6 @@ function ListSubGroup({
   onGroupDragEnd,
 }: Props) {
   const [editMode, setEditMode] = useState(false);
-  const [showGroup, setShowGroup] = useState(true);
 
   return (
     <div
@@ -62,11 +68,11 @@ function ListSubGroup({
         )}
         <a
           onClick={() => {
-            setShowGroup(!showGroup);
+            editGroupSettings(subGroup.id, { ...subGroup.settings, collapse: !subGroup.settings.collapse });
           }}
         >
-          {!showGroup && <IoIosArrowDown />}
-          {showGroup && <IoIosArrowUp />}
+          {subGroup.settings.collapse && <IoIosArrowDown />}
+          {!subGroup.settings.collapse && <IoIosArrowUp />}
         </a>
         <a
           onClick={() => {
@@ -77,12 +83,16 @@ function ListSubGroup({
         </a>
       </div>
       <div className={editMode ? '' : 'collapse'}>
-        <p>show numbers</p>
-        <p>sort by (dropdown property) (dropdown alphabetically) (sort button)</p>
-        <p>(checkbox) auto sort</p>
+        <ListGroupSettings
+          groupId={subGroup.id}
+          settings={subGroup.settings}
+          properties={properties}
+          editGroupSettings={editGroupSettings}
+          sortItems={sortItems}
+        ></ListGroupSettings>
       </div>
       {subGroup.size !== 0 && (
-        <ul className={'list-group list-group-flush' + (showGroup ? '' : ' collapse')}>
+        <ul className={'list-group list-group-flush' + (subGroup.settings.collapse ? ' collapse' : '')}>
           {items.map((item) => {
             return (
               <ListItem
