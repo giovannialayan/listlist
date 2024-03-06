@@ -49,4 +49,29 @@ const groupPositionSort = (groupA: Group, groupB: Group) => {
   return groupA.position - groupB.position;
 };
 
-export { itemPositionSort, getGroupItems, getSubGroupsAsGroups, getNumParentGroups, getParentGroups, groupPositionSort };
+const itemPropertySort = (itemA: Item, itemB: Item, property: string) => {
+  if (property === '') {
+    if (itemA.name < itemB.name) {
+      return -1;
+    } else if (itemA.name > itemB.name) {
+      return 1;
+    } else {
+      return 0;
+    }
+  } else {
+    const itemAProp = itemA.properties.find((prop) => prop.name === property)?.data;
+    const itemBProp = itemB.properties.find((prop) => prop.name === property)?.data;
+    if (itemAProp === undefined || itemBProp === undefined) {
+      return 0;
+    }
+    if (itemAProp < itemBProp) {
+      return -1;
+    } else if (itemAProp > itemBProp) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+};
+
+export { itemPositionSort, getGroupItems, getSubGroupsAsGroups, getNumParentGroups, getParentGroups, groupPositionSort, itemPropertySort };

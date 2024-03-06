@@ -1,3 +1,5 @@
+import GroupSettings from './IGroupSettings';
+
 interface Group {
   name: string;
   id: number;
@@ -5,6 +7,7 @@ interface Group {
   size: number;
   parent: number;
   position: number;
+  settings: GroupSettings;
 }
 
 export default Group;

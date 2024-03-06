@@ -44,7 +44,7 @@ function AddGroupControl({ groups, onSubmit, onCancel }: Props) {
         }}
         autoFocus
       ></input>
-      <div className='subGroupCheckbox'>
+      <div>
         <input
           type='checkbox'
           checked={subGroupsChecked}
@@ -52,7 +52,7 @@ function AddGroupControl({ groups, onSubmit, onCancel }: Props) {
             setSubGroupsChecked(e.currentTarget.checked);
           }}
         ></input>
-        <p>sub group</p>
+        <label>sub group</label>
       </div>
       {subGroupsChecked && (
         <DropdownButton title={'Parent Group: ' + groups[parentGroup].name}>

@@ -89,6 +89,7 @@ function ListSubGroup({
                 key={item.id}
                 item={item}
                 parentGroup={subGroup.id}
+                groupSettings={subGroup.settings}
                 editItem={editItem}
                 onDragStart={onItemDragStart}
                 onDragEnter={onItemDragEnter}

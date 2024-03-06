@@ -1,6 +1,6 @@
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useState } from 'react';
-import { ListData, Item, Group } from '../interfaces';
+import { ListData, Item, Group, GroupSettings } from '../interfaces';
 import { getGroupItems, getParentGroups, getSubGroupsAsGroups, groupPositionSort, itemPositionSort } from '../utils';
 import '../styles/ListGroup.css';
 import ListGroup from './ListGroup';
@@ -11,9 +11,11 @@ interface Props {
   editItem: (item: number, editedItem: Item) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
   editGroupPos: (groupId: number, prevPos: number, newPos: number) => void;
+  editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
+  sortItems: (groupId: number) => void;
 }
 
-function List({ listData, editItemGroupPos, editItem, editGroup, editGroupPos }: Props) {
+function List({ listData, editItemGroupPos, editItem, editGroup, editGroupPos, editGroupSettings, sortItems }: Props) {
   const [currentGroup, setCurrentGroup] = useState('');
 
   const [dropGroup, setDropGroup] = useState(-1);
@@ -77,7 +79,7 @@ function List({ listData, editItemGroupPos, editItem, editGroup, editGroupPos }:
 
     event.stopPropagation();
   };
-  console.log(listData);
+
   return (
     <div>
       <div>
@@ -108,8 +110,11 @@ function List({ listData, editItemGroupPos, editItem, editGroup, editGroupPos }:
                   subGroupItems={group.subGroups.reduce((acc, cur) => {
                     return { ...acc, [cur]: getGroupItems(listData.items, cur).sort((a, b) => itemPositionSort(a, b, cur)) };
                   }, {})}
+                  properties={listData.properties}
                   editItem={editItem}
                   editGroup={editGroup}
+                  editGroupSettings={editGroupSettings}
+                  sortItems={sortItems}
                   onItemDragStart={onItemDragStart}
                   onItemDragEnter={onItemDragEnter}
                   onItemDragEnd={onItemDragEnd}

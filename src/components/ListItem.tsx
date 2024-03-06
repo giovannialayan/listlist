@@ -1,5 +1,5 @@
 import { MdDragHandle } from 'react-icons/md';
-import { Item } from '../interfaces';
+import { GroupSettings, Item } from '../interfaces';
 import '../styles/ListItem.css';
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
@@ -8,6 +8,7 @@ import { MdEdit } from 'react-icons/md';
 interface Props {
   item: Item;
   parentGroup: number;
+  groupSettings: GroupSettings;
   editItem: (item: number, editedItem: Item) => void;
   onDragStart: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onDragEnter: (item: Item, parentGroup: number, event: React.DragEvent) => void;
@@ -15,7 +16,7 @@ interface Props {
   dragOver: boolean;
 }
 
-function ListItem({ item, parentGroup, editItem, onDragStart, onDragEnter, onDragEnd, dragOver }: Props) {
+function ListItem({ item, parentGroup, groupSettings, editItem, onDragStart, onDragEnter, onDragEnd, dragOver }: Props) {
   const [propertiesVisible, setPropertiesVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -36,7 +37,7 @@ function ListItem({ item, parentGroup, editItem, onDragStart, onDragEnter, onDra
           <MdDragHandle />
         </div>
         <div>
-          {!editMode && `${item.groupPositions.get(parentGroup) + '. '}${item.name}`}
+          {!editMode && `${groupSettings.numbered ? item.groupPositions.get(parentGroup)! + 1 + '. ' : ''}${item.name}`}
           {editMode && (
             <input
               value={item.name}

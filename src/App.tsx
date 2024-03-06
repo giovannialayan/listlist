@@ -3,8 +3,16 @@ import { useState } from 'react';
 import List from './components/List';
 import ListControls from './components/ListControls';
 import ListTitle from './components/ListTitle';
-import { ListData, Item, ItemProperty, Group } from './interfaces';
-import { getNumParentGroups, getParentGroups, getSubGroupsAsGroups, groupPositionSort, itemPositionSort } from './utils';
+import { ListData, Item, ItemProperty, Group, GroupSettings } from './interfaces';
+import {
+  getGroupItems,
+  getNumParentGroups,
+  getParentGroups,
+  getSubGroupsAsGroups,
+  groupPositionSort,
+  itemPositionSort,
+  itemPropertySort,
+} from './utils';
 
 function App() {
   const initData: ListData = {
@@ -19,7 +27,7 @@ function App() {
           [1, 0],
         ]),
         properties: [
-          { name: 'notes', data: 'no' },
+          { name: 'notes', data: 'c' },
           { name: 'prop', data: '' },
         ],
       },
@@ -32,7 +40,7 @@ function App() {
           [2, 0],
         ]),
         properties: [
-          { name: 'notes', data: '' },
+          { name: 'notes', data: 'a' },
           { name: 'prop', data: '' },
         ],
       },
@@ -45,7 +53,7 @@ function App() {
           [3, 0],
         ]),
         properties: [
-          { name: 'notes', data: '' },
+          { name: 'notes', data: 'b' },
           { name: 'prop', data: '' },
         ],
       },
@@ -72,25 +80,74 @@ function App() {
     ],
     properties: ['notes', 'prop'],
     groups: [
-      { name: 'Default', id: 0, subGroups: [], size: 3, parent: -1, position: 0 },
-      { name: 'a', id: 1, subGroups: [2, 4, 5], size: 1, parent: -1, position: 1 },
-      { name: 'b', id: 2, subGroups: [], size: 1, parent: 1, position: 0 },
-      { name: 'c', id: 3, subGroups: [], size: 1, parent: -1, position: 2 },
-      { name: 'b2', id: 4, subGroups: [], size: 1, parent: 1, position: 1 },
-      { name: 'b3', id: 5, subGroups: [], size: 1, parent: 1, position: 2 },
+      {
+        name: 'Default',
+        id: 0,
+        subGroups: [],
+        size: 3,
+        parent: -1,
+        position: 0,
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+      },
+      {
+        name: 'a',
+        id: 1,
+        subGroups: [2, 4, 5],
+        size: 1,
+        parent: -1,
+        position: 1,
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+      },
+      {
+        name: 'b',
+        id: 2,
+        subGroups: [],
+        size: 1,
+        parent: 1,
+        position: 0,
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+      },
+      {
+        name: 'c',
+        id: 3,
+        subGroups: [],
+        size: 1,
+        parent: -1,
+        position: 2,
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+      },
+      {
+        name: 'b2',
+        id: 4,
+        subGroups: [],
+        size: 1,
+        parent: 1,
+        position: 1,
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+      },
+      {
+        name: 'b3',
+        id: 5,
+        subGroups: [],
+        size: 1,
+        parent: 1,
+        position: 2,
+        settings: { numbered: true, autoSort: false, sortByProperty: '', sortAscending: true },
+      },
     ],
   };
   // const [listData, setListData] = useState({ groups: ['Default'], items: [] } as ListData);
   const [listData, setListData] = useState(initData);
 
   const addGroup = (groupName: string, parentGroup: number) => {
-    const newGroup = {
+    const newGroup: Group = {
       name: groupName,
       id: listData.groups.length,
       subGroups: [],
       size: 0,
       parent: parentGroup,
       position: getNumParentGroups(listData.groups),
+      settings: { numbered: false, autoSort: false, sortByProperty: '', sortAscending: true },
     };
 
     const nextGroups = [...listData.groups, newGroup];
@@ -121,9 +178,26 @@ function App() {
       properties: itemProperties,
     };
 
+    const newItemArr = [...listData.items, newItem];
+    const groupItems: Item[][] = [];
+
+    for (let i = 0; i < itemGroups.length; i++) {
+      groupItems.push(
+        getGroupItems(newItemArr, itemGroups[i]).sort((a, b) => itemPropertySort(a, b, listData.groups[itemGroups[i]].settings.sortByProperty))
+      );
+
+      if (!listData.groups[itemGroups[i]].settings.sortAscending) {
+        groupItems[i].reverse();
+      }
+
+      for (let j = 0; j < groupItems[i].length; j++) {
+        groupItems[i][j].groupPositions.set(itemGroups[i], j);
+      }
+    }
+
     setListData({
       ...listData,
-      items: [...listData.items, newItem],
+      items: newItemArr,
     });
   };
 
@@ -216,6 +290,45 @@ function App() {
     });
   };
 
+  const editGroupSettings = (groupId: number, newSettings: GroupSettings) => {
+    setListData({
+      ...listData,
+      groups: listData.groups.map((group) => {
+        if (group.id === groupId) {
+          return { ...group, settings: newSettings };
+        } else {
+          return group;
+        }
+      }),
+    });
+  };
+
+  const sortItems = (groupId: number) => {
+    const groupItems = getGroupItems(listData.items, groupId);
+    let groupItemsIds: number[] = [];
+    groupItems.sort((a, b) => itemPropertySort(a, b, listData.groups[groupId].settings.sortByProperty));
+
+    if (!listData.groups[groupId].settings.sortAscending) {
+      groupItems.reverse();
+    }
+
+    for (let i = 0; i < groupItems.length; i++) {
+      groupItems[i].groupPositions.set(groupId, i);
+      groupItemsIds.push(groupItems[i].id);
+    }
+
+    setListData({
+      ...listData,
+      items: listData.items.map((item) => {
+        if (groupItemsIds.includes(item.id)) {
+          return { ...item, groupPositions: groupItems[groupItemsIds.indexOf(item.id)].groupPositions };
+        } else {
+          return item;
+        }
+      }),
+    });
+  };
+
   //remove item note: keep item.id same as index in listdata.items
 
   return (
@@ -228,7 +341,15 @@ function App() {
         addItem={addItem}
         addProperty={addProperty}
       ></ListControls>
-      <List listData={listData} editItemGroupPos={editItemGroupPos} editItem={editItem} editGroup={editGroup} editGroupPos={editGroupPos}></List>
+      <List
+        listData={listData}
+        editItemGroupPos={editItemGroupPos}
+        editItem={editItem}
+        editGroup={editGroup}
+        editGroupPos={editGroupPos}
+        editGroupSettings={editGroupSettings}
+        sortItems={sortItems}
+      ></List>
     </>
   );
 }

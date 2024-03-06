@@ -1,22 +1,26 @@
 import { useState } from 'react';
 import ListItem from './ListItem';
-import { Item, Group } from '../interfaces';
+import { Item, Group, GroupSettings } from '../interfaces';
 import { MdDragHandle, MdEdit } from 'react-icons/md';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import '../styles/ListGroup.css';
 import ListSubGroup from './ListSubGroup';
+import ListGroupSettings from './ListGroupSettings';
 
 interface Props {
   group: Group;
   subGroups: Group[];
   items: Item[];
   subGroupItems: { [key: string]: Item[] };
+  properties: string[];
   dropGroup: number;
   dragOverItem: Item;
   dragOverGroup: number;
   groupDropParent: number;
   editItem: (item: number, editedItem: Item) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
+  editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
+  sortItems: (groupId: number) => void;
   onItemDragStart: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onItemDragEnter: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onItemDragEnd: (event: React.DragEvent) => void;
@@ -30,12 +34,15 @@ function ListGroup({
   subGroups,
   items,
   subGroupItems,
+  properties,
   dropGroup,
   dragOverItem,
   dragOverGroup,
   groupDropParent,
   editItem,
   editGroup,
+  editGroupSettings,
+  sortItems,
   onItemDragStart,
   onItemDragEnter,
   onItemDragEnd,
@@ -84,9 +91,13 @@ function ListGroup({
         </a>
       </div>
       <div className={editMode ? '' : 'collapse'}>
-        <p>show numbers</p>
-        <p>sort by (dropdown property) (dropdown alphabetically) (sort button)</p>
-        <p>(checkbox) auto sort</p>
+        <ListGroupSettings
+          groupId={group.id}
+          settings={group.settings}
+          properties={properties}
+          editGroupSettings={editGroupSettings}
+          sortItems={sortItems}
+        ></ListGroupSettings>
       </div>
       <div className={showGroup ? '' : ' collapse'}>
         {group.size !== 0 && (
@@ -97,6 +108,7 @@ function ListGroup({
                   key={item.id}
                   item={item}
                   parentGroup={group.id}
+                  groupSettings={group.settings}
                   editItem={editItem}
                   onDragStart={onItemDragStart}
                   onDragEnter={onItemDragEnter}
