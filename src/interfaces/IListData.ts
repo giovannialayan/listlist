@@ -6,6 +6,7 @@ interface ListData {
   properties: string[];
   groups: Group[];
   title: string;
+  id: number;
 }
 
 export default ListData;

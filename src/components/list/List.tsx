@@ -42,8 +42,8 @@ function List({ listData, editItemGroupPos, editItem, editGroup, editGroupPos, e
   };
 
   const onItemDragEnd = (event: React.DragEvent) => {
-    const dropPos = dragOverItem.groupPositions.get(dropGroup);
-    const dragPos = draggingItem.groupPositions.get(dropGroup);
+    const dropPos = dragOverItem.groupPositions[dropGroup];
+    const dragPos = draggingItem.groupPositions[dropGroup];
 
     if (dropPos !== undefined && dragPos !== undefined) {
       editItemGroupPos(draggingItem, dropGroup, dragPos, dropPos);

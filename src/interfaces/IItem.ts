@@ -4,7 +4,7 @@ interface Item {
   name: string;
   id: number;
   groups: number[];
-  groupPositions: Map<number, number>;
+  groupPositions: { [key: number]: number };
   properties: ItemProperty[];
 }
 

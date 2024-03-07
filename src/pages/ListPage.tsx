@@ -11,13 +11,16 @@ import {
   itemPositionSort,
   itemPropertySort,
 } from '../utils';
+import { FaArrowLeft } from 'react-icons/fa';
 
 interface Props {
   listData: ListData;
   setListData: (list: ListData) => void;
+  saveMode: (mode: boolean) => void;
+  setCurrentPage: (index: number) => void;
 }
 
-function ListPage({ listData, setListData }: Props) {
+function ListPage({ listData, setListData, saveMode, setCurrentPage }: Props) {
   const addGroup = (groupName: string, parentGroup: number) => {
     const newGroup: Group = {
       name: groupName,
@@ -40,6 +43,8 @@ function ListPage({ listData, setListData }: Props) {
       ...listData,
       groups: nextGroups,
     });
+
+    saveMode(true);
   };
 
   const addItem = (itemName: string, itemGroups: number[], itemProperties: ItemProperty[]) => {
@@ -47,13 +52,7 @@ function ListPage({ listData, setListData }: Props) {
       name: itemName,
       id: listData.items.length,
       groups: itemGroups,
-      groupPositions: new Map(
-        itemGroups.map((itemGroup) => {
-          const lastIndex = listData.groups[itemGroup].size;
-          listData.groups[itemGroup].size++;
-          return [itemGroup, lastIndex];
-        })
-      ),
+      groupPositions: itemGroups.reduce((a, v) => ({ ...a, [v]: listData.groups[v].size }), {}),
       properties: itemProperties,
     };
 
@@ -61,23 +60,34 @@ function ListPage({ listData, setListData }: Props) {
     const groupItems: Item[][] = [];
 
     for (let i = 0; i < itemGroups.length; i++) {
-      groupItems.push(
-        getGroupItems(newItemArr, itemGroups[i]).sort((a, b) => itemPropertySort(a, b, listData.groups[itemGroups[i]].settings.sortByProperty))
-      );
+      if (listData.groups[itemGroups[i]].settings.autoSort) {
+        groupItems.push(
+          getGroupItems(newItemArr, itemGroups[i]).sort((a, b) => itemPropertySort(a, b, listData.groups[itemGroups[i]].settings.sortByProperty))
+        );
 
-      if (!listData.groups[itemGroups[i]].settings.sortAscending) {
-        groupItems[i].reverse();
-      }
+        if (!listData.groups[itemGroups[i]].settings.sortAscending) {
+          groupItems[i].reverse();
+        }
 
-      for (let j = 0; j < groupItems[i].length; j++) {
-        groupItems[i][j].groupPositions.set(itemGroups[i], j);
+        for (let j = 0; j < groupItems[i].length; j++) {
+          groupItems[i][j].groupPositions = { ...groupItems[i][j].groupPositions, [itemGroups[i]]: j };
+        }
       }
     }
 
     setListData({
       ...listData,
+      groups: listData.groups.map((group) => {
+        if (itemGroups.includes(group.id)) {
+          return { ...group, size: group.size + 1 };
+        } else {
+          return group;
+        }
+      }),
       items: newItemArr,
     });
+
+    saveMode(true);
   };
 
   const addProperty = (propertyName: string) => {
@@ -85,6 +95,8 @@ function ListPage({ listData, setListData }: Props) {
       ...listData,
       properties: [...listData.properties, propertyName],
     });
+
+    saveMode(true);
   };
 
   const editItemGroupPos = (editItem: Item, groupId: number, prevPos: number, newPos: number) => {
@@ -96,13 +108,15 @@ function ListPage({ listData, setListData }: Props) {
     itemsInGroup.splice(newPos, 0, editItem);
 
     for (let i = 0; i < itemsInGroup.length; i++) {
-      itemsInGroup[i].groupPositions.set(groupId, i);
+      itemsInGroup[i].groupPositions = { ...itemsInGroup[i].groupPositions, [groupId]: i };
     }
 
     setListData({
       ...listData,
       items: listData.items,
     });
+
+    saveMode(true);
   };
 
   const editItem = (itemId: number, editedItem: Item) => {
@@ -116,6 +130,8 @@ function ListPage({ listData, setListData }: Props) {
         }
       }),
     });
+
+    saveMode(true);
   };
 
   const editGroup = (groupId: number, editedGroup: Group) => {
@@ -129,10 +145,14 @@ function ListPage({ listData, setListData }: Props) {
         }
       }),
     });
+
+    saveMode(true);
   };
 
   const editTitle = (title: string) => {
     setListData({ ...listData, title });
+
+    saveMode(true);
   };
 
   const editGroupPos = (groupId: number, prevPos: number, newPos: number) => {
@@ -167,6 +187,8 @@ function ListPage({ listData, setListData }: Props) {
         }
       }),
     });
+
+    saveMode(true);
   };
 
   const editGroupSettings = (groupId: number, newSettings: GroupSettings) => {
@@ -180,6 +202,8 @@ function ListPage({ listData, setListData }: Props) {
         }
       }),
     });
+
+    saveMode(true);
   };
 
   const sortItems = (groupId: number) => {
@@ -192,7 +216,7 @@ function ListPage({ listData, setListData }: Props) {
     }
 
     for (let i = 0; i < groupItems.length; i++) {
-      groupItems[i].groupPositions.set(groupId, i);
+      groupItems[i].groupPositions = { ...groupItems[i].groupPositions, [groupId]: i };
       groupItemsIds.push(groupItems[i].id);
     }
 
@@ -206,12 +230,19 @@ function ListPage({ listData, setListData }: Props) {
         }
       }),
     });
+
+    saveMode(true);
   };
 
   //remove item note: keep item.id same as index in listdata.items
 
   return (
     <>
+      <div>
+        <a onClick={() => setCurrentPage(0)}>
+          <FaArrowLeft />
+        </a>
+      </div>
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
       <ListControls
         groups={listData.groups}

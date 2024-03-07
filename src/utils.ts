@@ -2,8 +2,8 @@ import Group from './interfaces/IGroup';
 import Item from './interfaces/IItem';
 
 const itemPositionSort = (itemA: Item, itemB: Item, group: number) => {
-  const aPos = itemA.groupPositions.get(group);
-  const bPos = itemB.groupPositions.get(group);
+  const aPos = itemA.groupPositions[group];
+  const bPos = itemB.groupPositions[group];
   if (aPos !== undefined && bPos !== undefined) {
     return aPos - bPos;
   } else {

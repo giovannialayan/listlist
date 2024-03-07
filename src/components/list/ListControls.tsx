@@ -90,6 +90,7 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty }: Pr
         {!groupAddMode && !itemAddMode && !propertyAddMode && (
           <>
             <Button
+              disabled={groups.length === 0}
               onClick={() => {
                 setItemAddMode(true);
               }}

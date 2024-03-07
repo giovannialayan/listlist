@@ -37,7 +37,7 @@ function ListItem({ item, parentGroup, groupSettings, editItem, onDragStart, onD
           <MdDragHandle />
         </div>
         <div>
-          {!editMode && `${groupSettings.numbered ? item.groupPositions.get(parentGroup)! + 1 + '. ' : ''}${item.name}`}
+          {!editMode && `${groupSettings.numbered ? item.groupPositions[parentGroup] + 1 + '. ' : ''}${item.name}`}
           {editMode && (
             <input
               value={item.name}

@@ -1,21 +1,25 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ListData } from './interfaces';
 import ListPage from './pages/ListPage';
 import HomePage from './pages/HomePage';
+import _ from 'lodash';
+
+const localStoragePrefix = 'listlist.';
+const listsKey = 'lists';
+
+const defaultList: ListData = { title: 'List', items: [], groups: [], properties: [], id: 0 };
 
 function App() {
   const initData: ListData = {
     title: 'title',
+    id: 0,
     items: [
       {
         name: 'first',
         id: 0,
         groups: [0, 1],
-        groupPositions: new Map([
-          [0, 0],
-          [1, 0],
-        ]),
+        groupPositions: { 0: 0, 1: 0 },
         properties: [
           { name: 'notes', data: 'c' },
           { name: 'prop', data: '' },
@@ -25,10 +29,7 @@ function App() {
         name: 'second',
         id: 1,
         groups: [0, 2],
-        groupPositions: new Map([
-          [0, 1],
-          [2, 0],
-        ]),
+        groupPositions: { 0: 1, 2: 0 },
         properties: [
           { name: 'notes', data: 'a' },
           { name: 'prop', data: '' },
@@ -38,10 +39,7 @@ function App() {
         name: 'third',
         id: 2,
         groups: [0, 3],
-        groupPositions: new Map([
-          [0, 2],
-          [3, 0],
-        ]),
+        groupPositions: { 0: 2, 3: 0 },
         properties: [
           { name: 'notes', data: 'b' },
           { name: 'prop', data: '' },
@@ -51,7 +49,7 @@ function App() {
         name: 'fourth',
         id: 3,
         groups: [4],
-        groupPositions: new Map([[4, 0]]),
+        groupPositions: { 4: 0 },
         properties: [
           { name: 'notes', data: '' },
           { name: 'prop', data: '' },
@@ -61,7 +59,7 @@ function App() {
         name: 'fifth',
         id: 4,
         groups: [5],
-        groupPositions: new Map([[5, 0]]),
+        groupPositions: { 5: 0 },
         properties: [
           { name: 'notes', data: '' },
           { name: 'prop', data: '' },
@@ -126,22 +124,76 @@ function App() {
       },
     ],
   };
-  // const [listData, setListData] = useState({ groups: ['Default'], items: [] } as ListData);
-  const [listData, setListData] = useState(initData);
-
+  const [listData, setListData] = useState({} as ListData);
+  const [listTitles, setListTitles] = useState([] as string[]);
   const [currentPage, setCurrentPage] = useState(0);
+  const shouldSave = useRef(false);
+
+  useEffect(() => {
+    const lists = localStorage.getItem(localStoragePrefix + listsKey);
+
+    if (lists) {
+      const listDatas: ListData[] = JSON.parse(lists);
+      setListTitles(
+        listDatas.map((list) => {
+          return list.title;
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (shouldSave.current) {
+      saveList();
+    }
+
+    shouldSave.current = false;
+  }, [listData]);
+
+  const saveList = () => {
+    const lists = localStorage.getItem(localStoragePrefix + listsKey);
+    if (lists) {
+      const listDatas: ListData[] = JSON.parse(lists);
+      listDatas[listData.id] = listData;
+      localStorage.setItem(localStoragePrefix + listsKey, JSON.stringify(listDatas));
+    }
+  };
+
+  const saveMode = (mode: boolean) => {
+    shouldSave.current = mode;
+  };
 
   const openList = (index: number) => {
-    //get listData from localStorag
-    //set listData to new listData
+    //get listData from localStorage
+    //set listData to selected listData
+    const lists = localStorage.getItem(localStoragePrefix + listsKey);
+
+    if (lists) {
+      const listDatas: ListData[] = JSON.parse(lists);
+      setListData(listDatas[index]);
+      setCurrentPage(1);
+    }
+  };
+
+  const newList = () => {
+    const lists = localStorage.getItem(localStoragePrefix + listsKey);
+    if (lists) {
+      const listDatas: ListData[] = JSON.parse(lists);
+      const newListData = { ...defaultList, id: listDatas.length };
+      localStorage.setItem(localStoragePrefix + listsKey, JSON.stringify([...listDatas, newListData]));
+      setListData(newListData);
+    } else {
+      localStorage.setItem(localStoragePrefix + listsKey, JSON.stringify([defaultList]));
+      setListData(_.cloneDeep(defaultList));
+    }
 
     setCurrentPage(1);
   };
 
   return (
     <>
-      {currentPage === 0 && <HomePage listTitles={[listData.title]} openList={openList}></HomePage>}
-      {currentPage === 1 && <ListPage listData={listData} setListData={setListData}></ListPage>}
+      {currentPage === 0 && <HomePage listTitles={listTitles} openList={openList} newList={newList}></HomePage>}
+      {currentPage === 1 && <ListPage listData={listData} setListData={setListData} saveMode={saveMode} setCurrentPage={setCurrentPage}></ListPage>}
     </>
   );
 }
