@@ -1,6 +1,6 @@
 import { MdDragHandle } from 'react-icons/md';
-import { GroupSettings, Item } from '../interfaces';
-import '../styles/ListItem.css';
+import { GroupSettings, Item } from '../../interfaces';
+import '../../styles/ListItem.css';
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import ListItem from './ListItem';
-import { Item, Group, GroupSettings } from '../interfaces';
+import { Item, Group, GroupSettings } from '../../interfaces';
 import { MdDragHandle, MdEdit } from 'react-icons/md';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import '../styles/ListGroup.css';
+import '../../styles/ListGroup.css';
 import ListSubGroup from './ListSubGroup';
 import ListGroupSettings from './ListGroupSettings';
 

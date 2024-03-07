@@ -1,8 +1,8 @@
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useState } from 'react';
-import { ListData, Item, Group, GroupSettings } from '../interfaces';
-import { getGroupItems, getParentGroups, getSubGroupsAsGroups, groupPositionSort, itemPositionSort } from '../utils';
-import '../styles/ListGroup.css';
+import { ListData, Item, Group, GroupSettings } from '../../interfaces';
+import { getGroupItems, getParentGroups, getSubGroupsAsGroups, groupPositionSort, itemPositionSort } from '../../utils';
+import '../../styles/ListGroup.css';
 import ListGroup from './ListGroup';
 
 interface Props {

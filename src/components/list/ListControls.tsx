@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
-import '../styles/ListControls.css';
+import '../../styles/ListControls.css';
 import { useState } from 'react';
-import { ItemProperty, Group } from '../interfaces';
+import { ItemProperty, Group } from '../../interfaces';
 import AddControl from './AddControl';
 import AddItemControl from './AddItemControl';
 import AddGroupControl from './AddGroupControl';

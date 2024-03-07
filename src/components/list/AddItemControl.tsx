@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { MdCancel } from 'react-icons/md';
-import ItemProperty from '../interfaces/IItemProperty';
-import MultiSelectDropdown from './MultiSelectDropdown';
-import { Group } from '../interfaces';
+import ItemProperty from '../../interfaces/IItemProperty';
+import MultiSelectDropdown from '../MultiSelectDropdown';
+import { Group } from '../../interfaces';
 
 interface Props {
   groups: Group[];

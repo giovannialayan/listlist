@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdCancel } from 'react-icons/md';
-import '../styles/AddGroupControl.css';
-import { Group } from '../interfaces';
+import '../../styles/AddGroupControl.css';
+import { Group } from '../../interfaces';
 
 interface Props {
   groups: Group[];

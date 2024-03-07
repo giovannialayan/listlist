@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { MdDragHandle, MdEdit } from 'react-icons/md';
-import { Group, Item, GroupSettings } from '../interfaces';
-import '../styles/ListGroup.css';
+import { Group, Item, GroupSettings } from '../../interfaces';
+import '../../styles/ListGroup.css';
 import ListItem from './ListItem';
 import ListGroupSettings from './ListGroupSettings';
 

@@ -1,6 +1,6 @@
 import { DropdownButton, Dropdown, Button } from 'react-bootstrap';
-import { GroupSettings } from '../interfaces';
-import Checkbox from './Checkbox';
+import { GroupSettings } from '../../interfaces';
+import Checkbox from '../Checkbox';
 
 interface Props {
   groupId: number;

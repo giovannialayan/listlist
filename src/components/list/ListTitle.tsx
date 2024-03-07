@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MdEdit } from 'react-icons/md';
-import '../styles/ListTitle.css';
+import '../../styles/ListTitle.css';
 
 interface Props {
   children: string;
