@@ -12,15 +12,17 @@ import {
   itemPropertySort,
 } from '../utils';
 import { FaArrowLeft } from 'react-icons/fa';
+import { MdOutlineSave } from 'react-icons/md';
 
 interface Props {
   listData: ListData;
   setListData: (list: ListData) => void;
   saveMode: (mode: boolean) => void;
   setCurrentPage: (index: number) => void;
+  downloadList: () => void;
 }
 
-function ListPage({ listData, setListData, saveMode, setCurrentPage }: Props) {
+function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadList }: Props) {
   const addGroup = (groupName: string, parentGroup: number) => {
     const newGroup: Group = {
       name: groupName,
@@ -241,6 +243,9 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage }: Props) {
       <div>
         <a onClick={() => setCurrentPage(0)}>
           <FaArrowLeft />
+        </a>
+        <a onClick={downloadList}>
+          <MdOutlineSave />
         </a>
       </div>
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
