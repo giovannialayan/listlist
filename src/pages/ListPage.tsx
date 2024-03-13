@@ -295,7 +295,76 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
     saveMode(true);
   };
 
-  const deleteGroup = (id: number) => {};
+  const deleteGroup = (groupId: number) => {
+    const nextItems = listData.items.slice();
+    const nextGroups = listData.groups.slice();
+    const parentId = nextGroups[groupId].parent;
+    const childrenIds = nextGroups[groupId].subGroups;
+
+    //if it is a child, remove it from parent
+    if (parentId !== -1) {
+      _.remove(nextGroups[parentId].subGroups, (subGroup) => subGroup === groupId);
+    }
+
+    //remove group and its children
+    _.remove(nextGroups, (group) => group.id === groupId || group.parent === groupId);
+
+    //remove group and its children from item groups and group positions
+    for (let i = 0; i < nextItems.length; i++) {
+      _.remove(nextItems[i].groups, (group) => group === groupId || childrenIds.includes(group));
+
+      delete nextItems[i].groupPositions[groupId];
+      for (let j = 0; j < childrenIds.length; j++) {
+        delete nextItems[i].groupPositions[childrenIds[j]];
+      }
+    }
+
+    //remove items with no groups
+    _.remove(nextItems, (item) => item.groups.length === 0);
+
+    //reset item ids
+    for (let i = 0; i < nextItems.length; i++) {
+      nextItems[i].id = i;
+    }
+
+    //change group id and all references to it for all groups on and after the removal
+    for (let i = groupId; i < nextGroups.length; i++) {
+      //get prev and new ids
+      const prevId = nextGroups[i].id;
+      const newId = i;
+      nextGroups[i].id = newId;
+
+      //if this group has a parent, replace prev id with new id in parent's sub group array
+      const parentLocation = nextGroups.findIndex((group) => group.id === nextGroups[i].parent);
+
+      if (parentLocation !== -1) {
+        const subGroupPos = nextGroups[parentLocation].subGroups.indexOf(prevId);
+        nextGroups[parentLocation].subGroups[subGroupPos] = newId;
+      }
+
+      //change parent property for all sub groups to new id
+      for (let j = 0; j < nextGroups[i].subGroups.length; j++) {
+        const subGroupLocation = nextGroups.findIndex((group) => group.id === nextGroups[i].subGroups[j]);
+        nextGroups[subGroupLocation].parent = newId;
+      }
+
+      //replace prev id with new id in item group array and group positions object
+      const groupItems = getGroupItems(nextItems, prevId);
+
+      for (let j = 0; j < groupItems.length; j++) {
+        const groupIndex = nextItems[groupItems[j].id].groups.indexOf(prevId);
+        nextItems[groupItems[j].id].groups[groupIndex] = newId; //replace id in group arr
+
+        const groupPos = nextItems[groupItems[j].id].groupPositions[prevId]; //get group pos
+        delete nextItems[groupItems[j].id].groupPositions[prevId]; //delete old group id key
+        nextItems[groupItems[j].id].groupPositions = { ...nextItems[groupItems[j].id].groupPositions, [newId]: groupPos }; //add new group id key with its pos
+      }
+    }
+
+    setListData({ ...listData, groups: nextGroups, items: nextItems });
+
+    saveMode(true);
+  };
 
   const deleteProperties = (names: string[]) => {
     setListData({
@@ -335,6 +404,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
         editItem={editItem}
         deleteItem={deleteItem}
         editGroup={editGroup}
+        deleteGroup={deleteGroup}
         editGroupPos={editGroupPos}
         editGroupSettings={editGroupSettings}
         sortItems={sortItems}

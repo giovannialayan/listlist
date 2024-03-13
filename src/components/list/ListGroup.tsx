@@ -20,6 +20,7 @@ interface Props {
   editItem: (item: number, editedItem: Item) => void;
   deleteItem: (itemId: number, groupId: number) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
+  deleteGroup: (groupId: number) => void;
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
   sortItems: (groupId: number) => void;
   onItemDragStart: (item: Item, parentGroup: number, event: React.DragEvent) => void;
@@ -43,6 +44,7 @@ function ListGroup({
   editItem,
   deleteItem,
   editGroup,
+  deleteGroup,
   editGroupSettings,
   sortItems,
   onItemDragStart,
@@ -98,6 +100,10 @@ function ListGroup({
           properties={properties}
           editGroupSettings={editGroupSettings}
           sortItems={sortItems}
+          deleteGroup={(id) => {
+            deleteGroup(id);
+            setEditMode(false);
+          }}
         ></ListGroupSettings>
       </div>
       <div className={group.settings.collapse ? ' collapse' : ''}>
@@ -132,6 +138,7 @@ function ListGroup({
               dragOverItem={dragOverItem}
               editGroup={editGroup}
               editItem={editItem}
+              deleteGroup={deleteGroup}
               deleteItem={deleteItem}
               editGroupSettings={editGroupSettings}
               sortItems={sortItems}

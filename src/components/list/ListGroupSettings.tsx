@@ -8,9 +8,10 @@ interface Props {
   properties: string[];
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
   sortItems: (groupId: number) => void;
+  deleteGroup: (groupId: number) => void;
 }
 
-function ListGroupSettings({ groupId, settings, properties, editGroupSettings, sortItems }: Props) {
+function ListGroupSettings({ groupId, settings, properties, editGroupSettings, sortItems, deleteGroup }: Props) {
   return (
     <div>
       <Checkbox
@@ -49,6 +50,7 @@ function ListGroupSettings({ groupId, settings, properties, editGroupSettings, s
           sort when adding item
         </Checkbox>
       </div>
+      <Button onClick={() => deleteGroup(groupId)}>Delete Group</Button>
     </div>
   );
 }
