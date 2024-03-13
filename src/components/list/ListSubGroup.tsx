@@ -14,6 +14,7 @@ interface Props {
   dragOverItem: Item;
   groupDragOver: boolean;
   editItem: (item: number, editedItem: Item) => void;
+  deleteItem: (itemId: number, groupId: number) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
   sortItems: (groupId: number) => void;
@@ -33,6 +34,7 @@ function ListSubGroup({
   dragOverItem,
   groupDragOver,
   editItem,
+  deleteItem,
   editGroup,
   editGroupSettings,
   sortItems,
@@ -101,6 +103,7 @@ function ListSubGroup({
                 parentGroup={subGroup.id}
                 groupSettings={subGroup.settings}
                 editItem={editItem}
+                deleteItem={deleteItem}
                 onDragStart={onItemDragStart}
                 onDragEnter={onItemDragEnter}
                 onDragEnd={onItemDragEnd}

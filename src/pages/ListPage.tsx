@@ -13,6 +13,9 @@ import {
 } from '../utils';
 import { FaArrowLeft } from 'react-icons/fa';
 import { MdOutlineSave } from 'react-icons/md';
+import { Button, Modal } from 'react-bootstrap';
+import { useState } from 'react';
+import _ from 'lodash';
 
 interface Props {
   listData: ListData;
@@ -20,9 +23,12 @@ interface Props {
   saveMode: (mode: boolean) => void;
   setCurrentPage: (index: number) => void;
   downloadList: () => void;
+  deleteList: (id: number) => void;
 }
 
-function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadList }: Props) {
+function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadList, deleteList }: Props) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
   const addGroup = (groupName: string, parentGroup: number) => {
     const newGroup: Group = {
       name: groupName,
@@ -95,6 +101,9 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
   const addProperty = (propertyName: string) => {
     setListData({
       ...listData,
+      items: listData.items.map((item) => {
+        return { ...item, properties: [...item.properties, { name: propertyName, data: '' }] };
+      }),
       properties: [...listData.properties, propertyName],
     });
 
@@ -102,7 +111,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
   };
 
   const editItemGroupPos = (editItem: Item, groupId: number, prevPos: number, newPos: number) => {
-    let itemsInGroup = listData.items.filter((item) => item.groups.includes(groupId));
+    let itemsInGroup = getGroupItems(listData.items, groupId);
 
     itemsInGroup.sort((a, b) => itemPositionSort(a, b, groupId));
 
@@ -237,6 +246,68 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
   };
 
   //remove item note: keep item.id same as index in listdata.items
+  const deleteItem = (itemId: number, groupId: number) => {
+    const nextItems = listData.items.slice();
+    const nextGroups = listData.groups.slice();
+
+    if (groupId === -1) {
+      //remove from all groups
+      const removedFromGroups = nextItems[itemId].groups;
+      _.remove(nextItems, (item) => {
+        return item.id === itemId;
+      });
+
+      for (let i = 0; i < nextItems.length; i++) {
+        nextItems[i].id = i;
+      }
+
+      for (let i = 0; i < removedFromGroups.length; i++) {
+        nextGroups[removedFromGroups[i]].size -= 1;
+        const groupItems = getGroupItems(nextItems, removedFromGroups[i]).sort((a, b) => itemPositionSort(a, b, removedFromGroups[i]));
+
+        for (let j = 0; j < groupItems.length; j++) {
+          nextItems[groupItems[j].id].groupPositions = { ...nextItems[groupItems[j].id].groupPositions, [removedFromGroups[i]]: j };
+        }
+      }
+    } else {
+      //remove from selected group
+      nextItems[itemId].groups = nextItems[itemId].groups.filter((group) => {
+        return group !== groupId;
+      });
+
+      delete nextItems[itemId].groupPositions[groupId];
+
+      nextGroups[groupId].size -= 1;
+
+      const groupItems = getGroupItems(nextItems, groupId).sort((a, b) => itemPositionSort(a, b, groupId));
+
+      for (let i = 0; i < groupItems.length; i++) {
+        nextItems[groupItems[i].id].groupPositions = { ...nextItems[groupItems[i].id].groupPositions, [groupId]: i };
+      }
+    }
+
+    setListData({
+      ...listData,
+      groups: nextGroups,
+      items: nextItems,
+    });
+
+    saveMode(true);
+  };
+
+  const deleteGroup = (id: number) => {};
+
+  const deleteProperties = (names: string[]) => {
+    setListData({
+      ...listData,
+      properties: listData.properties.filter((prop) => !names.includes(prop)),
+      items: listData.items.map((item) => {
+        return { ...item, properties: item.properties.filter((itemProp) => !names.includes(itemProp.name)) };
+      }),
+    });
+
+    saveMode(true);
+  };
 
   return (
     <>
@@ -247,6 +318,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
         <a onClick={downloadList}>
           <MdOutlineSave />
         </a>
+        <Button onClick={() => setShowDeleteConfirm(true)}>Delete List</Button>
       </div>
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
       <ListControls
@@ -255,16 +327,25 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
         properties={listData.properties}
         addItem={addItem}
         addProperty={addProperty}
+        deleteProperties={deleteProperties}
       ></ListControls>
       <List
         listData={listData}
         editItemGroupPos={editItemGroupPos}
         editItem={editItem}
+        deleteItem={deleteItem}
         editGroup={editGroup}
         editGroupPos={editGroupPos}
         editGroupSettings={editGroupSettings}
         sortItems={sortItems}
       ></List>
+      <Modal show={showDeleteConfirm} onHide={() => setShowDeleteConfirm(false)}>
+        <Modal.Body>Are you sure you want to delete {listData.title}?</Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setShowDeleteConfirm(false)}>No, don't delete</Button>
+          <Button onClick={() => deleteList(listData.id)}>Yes, delete</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

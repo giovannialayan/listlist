@@ -9,13 +9,14 @@ interface Props {
   listData: ListData;
   editItemGroupPos: (item: Item, group: number, prevPos: number, newPos: number) => void;
   editItem: (item: number, editedItem: Item) => void;
+  deleteItem: (itemId: number, groupId: number) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
   editGroupPos: (groupId: number, prevPos: number, newPos: number) => void;
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
   sortItems: (groupId: number) => void;
 }
 
-function List({ listData, editItemGroupPos, editItem, editGroup, editGroupPos, editGroupSettings, sortItems }: Props) {
+function List({ listData, editItemGroupPos, editItem, deleteItem, editGroup, editGroupPos, editGroupSettings, sortItems }: Props) {
   const [currentGroup, setCurrentGroup] = useState('');
 
   const [dropGroup, setDropGroup] = useState(-1);
@@ -112,6 +113,7 @@ function List({ listData, editItemGroupPos, editItem, editGroup, editGroupPos, e
                   }, {})}
                   properties={listData.properties}
                   editItem={editItem}
+                  deleteItem={deleteItem}
                   editGroup={editGroup}
                   editGroupSettings={editGroupSettings}
                   sortItems={sortItems}

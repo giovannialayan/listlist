@@ -4,19 +4,21 @@ import '../../styles/ListItem.css';
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
+import { Button } from 'react-bootstrap';
 
 interface Props {
   item: Item;
   parentGroup: number;
   groupSettings: GroupSettings;
   editItem: (item: number, editedItem: Item) => void;
+  deleteItem: (itemId: number, groupId: number) => void;
   onDragStart: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onDragEnter: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onDragEnd: (event: React.DragEvent) => void;
   dragOver: boolean;
 }
 
-function ListItem({ item, parentGroup, groupSettings, editItem, onDragStart, onDragEnter, onDragEnd, dragOver }: Props) {
+function ListItem({ item, parentGroup, groupSettings, editItem, deleteItem, onDragStart, onDragEnter, onDragEnd, dragOver }: Props) {
   const [propertiesVisible, setPropertiesVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -106,6 +108,15 @@ function ListItem({ item, parentGroup, groupSettings, editItem, onDragStart, onD
             </p>
           );
         })}
+        <Button onClick={() => deleteItem(item.id, parentGroup)}>Remove</Button>
+        <Button
+          onClick={() => {
+            deleteItem(item.id, -1);
+            setEditMode(false);
+          }}
+        >
+          Delete
+        </Button>
       </div>
     </li>
   );

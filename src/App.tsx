@@ -188,7 +188,6 @@ function App() {
     const lists = localStorage.getItem(localStoragePrefix + listsKey);
     if (lists) {
       const listDatas: ListData[] = JSON.parse(lists);
-      // const newListData = { ...defaultList, id: listDatas.length };
       if (index === -1) {
         newListData.id = listDatas.length;
         localStorage.setItem(localStoragePrefix + listsKey, JSON.stringify([...listDatas, newListData]));
@@ -212,6 +211,28 @@ function App() {
     }
   };
 
+  const deleteList = (id: number) => {
+    const lists = localStorage.getItem(localStoragePrefix + listsKey);
+    if (lists) {
+      const listDatas: ListData[] = JSON.parse(lists);
+      _.remove(listDatas, (list) => {
+        return list.id === id;
+      });
+
+      for (let i = 0; i < listDatas.length; i++) {
+        listDatas[i].id = i;
+      }
+
+      localStorage.setItem(localStoragePrefix + listsKey, JSON.stringify(listDatas));
+      setListTitles(
+        listDatas.map((list) => {
+          return list.title;
+        })
+      );
+      setCurrentPage(0);
+    }
+  };
+
   return (
     <>
       {currentPage === 0 && <HomePage listTitles={listTitles} openList={openList} newList={newList} setCurrentPage={setCurrentPage}></HomePage>}
@@ -222,6 +243,7 @@ function App() {
           saveMode={saveMode}
           setCurrentPage={setCurrentPage}
           downloadList={downloadListJSON}
+          deleteList={deleteList}
         ></ListPage>
       )}
     </>
