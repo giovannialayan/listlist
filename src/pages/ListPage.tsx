@@ -382,13 +382,13 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
     <div className='d-flex flex-column align-items-center gap-3'>
       <div className='d-flex flex-row align-items-center gap-4 position-absolute top-0 start-0 ps-4 pt-3'>
         <a role='button' onClick={() => setCurrentPage(0)}>
-          <FaArrowLeft size={'2em'} />
+          <FaArrowLeft size={'1.75em'} />
         </a>
         <a role='button' onClick={downloadList}>
-          <MdOutlineSave size={'2em'} />
+          <MdOutlineSave size={'1.75em'} />
         </a>
         <a role='button' onClick={() => setShowDeleteConfirm(true)}>
-          <MdDelete size={'2em'} />
+          <MdDelete size={'1.75em'} />
         </a>
       </div>
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>

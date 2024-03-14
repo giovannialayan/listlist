@@ -20,7 +20,17 @@
   color: gray;
 }
 
-.toggleThemeButton > svg {
-  width: 2em;
-  height: 2em;
+.kofiButton {
+  position: absolute;
+  bottom: 1em;
+  left: 1em;
+}
+
+@media (max-width: 576px) {
+  .kofiButton {
+    top: 0.75em;
+    right: 6em;
+    left: auto;
+    bottom: auto;
+  }
 }

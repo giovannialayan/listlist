@@ -110,6 +110,7 @@ function HomePage({ listTitles, openList, newList, setCurrentPage }: Props) {
             </Button>
           );
         })}
+        {listTitles.length === 0 && <p className='fs-3'>No lists yet</p>}
       </div>
     </div>
   );

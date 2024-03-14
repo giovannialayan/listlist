@@ -79,7 +79,8 @@ function App() {
       const listDatas: ListData[] = JSON.parse(lists);
       if (index === -1) {
         newListData.id = listDatas.length;
-        localStorage.setItem(localStoragePrefix + listsKey, JSON.stringify([...listDatas, newListData]));
+        listDatas.push(newListData);
+        localStorage.setItem(localStoragePrefix + listsKey, JSON.stringify(listDatas));
       } else {
         newListData.id = index;
         listDatas[index] = newListData;
@@ -87,7 +88,7 @@ function App() {
       }
 
       setListData(_.cloneDeep(newListData)); //in case it's default, i don't want default to mutate because if multiple lists are made in the same session default would be different
-      setListTitles(
+      setListTitles(() =>
         listDatas.map((list) => {
           return list.title;
         })
@@ -135,8 +136,16 @@ function App() {
   return (
     <>
       <a role='button' onClick={toggleTheme} className={`link-${currentTheme === 'dark' ? 'light' : 'dark'} toggleThemeButton`}>
-        {currentTheme === 'dark' && <BsLightbulb />}
-        {currentTheme === 'light' && <BsLightbulbFill />}
+        {currentTheme === 'dark' && <BsLightbulb size={'2em'} />}
+        {currentTheme === 'light' && <BsLightbulbFill size={'2em'} />}
+      </a>
+      <a className='kofiButton' href='https://ko-fi.com/F1F3K985A' target='_blank'>
+        <img
+          height='36'
+          style={{ border: '0px', height: '36px' }}
+          src='https://storage.ko-fi.com/cdn/kofi1.png?v=3'
+          alt='Buy Me a Coffee at ko-fi.com'
+        />
       </a>
       {currentPage === 0 && <HomePage listTitles={listTitles} openList={openList} newList={newList} setCurrentPage={setCurrentPage}></HomePage>}
       {currentPage === 1 && (
