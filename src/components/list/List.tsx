@@ -83,7 +83,7 @@ function List({ listData, editItemGroupPos, editItem, deleteItem, editGroup, del
   };
 
   return (
-    <div>
+    <div className='d-flex flex-column align-items-center gap-2'>
       <div>
         <DropdownButton variant='secondary' title={`Group: ${currentGroup === '' ? 'All Groups' : currentGroup}`}>
           <Dropdown.Item onClick={() => setCurrentGroup('')}>All Groups</Dropdown.Item>

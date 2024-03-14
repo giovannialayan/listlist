@@ -24,7 +24,7 @@ function ListItem({ item, parentGroup, groupSettings, editItem, deleteItem, onDr
 
   return (
     <li
-      className={'list-group-item listItem' + (dragOver ? ' dragOver' : '')}
+      className={'list-group-item d-flex flex-column gap-3' + (dragOver ? ' dragOver' : '')}
       onDragStart={(e) => {
         onDragStart(item, parentGroup, e);
       }}
@@ -34,45 +34,39 @@ function ListItem({ item, parentGroup, groupSettings, editItem, deleteItem, onDr
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
-      <div className='itemTop'>
+      <div className='d-flex flex-row justify-content-center align-items-center gap-1'>
         <div draggable>
           <MdDragHandle />
         </div>
-        <div>
-          {!editMode && `${groupSettings.numbered ? item.groupPositions[parentGroup] + 1 + '. ' : ''}${item.name}`}
-          {editMode && (
-            <input
-              value={item.name}
-              onChange={(e) => {
-                editItem(item.id, {
-                  ...item,
-                  name: e.currentTarget.value,
-                });
-              }}
-            ></input>
-          )}
-        </div>
-        <div>
-          <a
-            onClick={() => {
-              setPropertiesVisible(!propertiesVisible);
-              setEditMode(false);
+        {!editMode && `${groupSettings.numbered ? item.groupPositions[parentGroup] + 1 + '. ' : ''}${item.name}`}
+        {editMode && (
+          <input
+            value={item.name}
+            onChange={(e) => {
+              editItem(item.id, {
+                ...item,
+                name: e.currentTarget.value,
+              });
             }}
-          >
-            {!propertiesVisible && !editMode && <IoIosArrowDown />}
-            {(propertiesVisible || editMode) && <IoIosArrowUp />}
-          </a>
-        </div>
-        <div>
-          <a
-            onClick={() => {
-              setEditMode(!editMode);
-              setPropertiesVisible(false);
-            }}
-          >
-            <MdEdit />
-          </a>
-        </div>
+          ></input>
+        )}
+        <a
+          onClick={() => {
+            setPropertiesVisible(!propertiesVisible);
+            setEditMode(false);
+          }}
+        >
+          {!propertiesVisible && !editMode && <IoIosArrowDown />}
+          {(propertiesVisible || editMode) && <IoIosArrowUp />}
+        </a>
+        <a
+          onClick={() => {
+            setEditMode(!editMode);
+            setPropertiesVisible(false);
+          }}
+        >
+          <MdEdit />
+        </a>
       </div>
       <div className={propertiesVisible ? '' : 'collapse'}>
         {item.properties.map((property, index) => {
@@ -85,41 +79,45 @@ function ListItem({ item, parentGroup, groupSettings, editItem, deleteItem, onDr
           );
         })}
       </div>
-      <div className={editMode ? '' : 'collapse'}>
-        {item.properties.map((property, index) => {
-          return (
-            <p key={index}>
-              {property.name}:{' '}
-              <input
-                value={property.data}
-                onChange={(e) => {
-                  editItem(item.id, {
-                    ...item,
-                    properties: item.properties.map((prop, jindex) => {
-                      if (jindex === index) {
-                        return { ...prop, data: e.currentTarget.value };
-                      } else {
-                        return prop;
-                      }
-                    }),
-                  });
-                }}
-              ></input>
-            </p>
-          );
-        })}
-        <Button variant='secondary' onClick={() => deleteItem(item.id, parentGroup)}>
-          Remove
-        </Button>
-        <Button
-          variant='secondary'
-          onClick={() => {
-            deleteItem(item.id, -1);
-            setEditMode(false);
-          }}
-        >
-          Delete
-        </Button>
+      <div className={`flex-column align-items-center ${editMode ? 'd-flex' : 'collapse'}`}>
+        <div>
+          {item.properties.map((property, index) => {
+            return (
+              <p key={index} className='d-flex flex-row align-items-center justify-content-end gap-2'>
+                {property.name}:{' '}
+                <input
+                  value={property.data}
+                  onChange={(e) => {
+                    editItem(item.id, {
+                      ...item,
+                      properties: item.properties.map((prop, jindex) => {
+                        if (jindex === index) {
+                          return { ...prop, data: e.currentTarget.value };
+                        } else {
+                          return prop;
+                        }
+                      }),
+                    });
+                  }}
+                ></input>
+              </p>
+            );
+          })}
+        </div>
+        <div className='d-flex flex-row gap-4'>
+          <Button variant='secondary' onClick={() => deleteItem(item.id, parentGroup)}>
+            Remove
+          </Button>
+          <Button
+            variant='secondary'
+            onClick={() => {
+              deleteItem(item.id, -1);
+              setEditMode(false);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
     </li>
   );

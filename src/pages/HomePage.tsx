@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
-import { MdCancel } from 'react-icons/md';
+import { MdClose } from 'react-icons/md';
 import { ListData } from '../interfaces';
 import Checkbox from '../components/Checkbox';
+import '../styles/ControlMenu.css';
 
 interface Props {
   listTitles: string[];
@@ -66,11 +67,11 @@ function HomePage({ listTitles, openList, newList, setCurrentPage }: Props) {
           </Button>
         )}
         {uploadMode && (
-          <div className='d-flex flex-column align-items-center gap-2 mb-3'>
+          <div className='controlMenu gap-2'>
             <a onClick={() => setUploadMode(false)}>
-              <MdCancel />
+              <MdClose />
             </a>
-            <input type='file' accept='json' onChange={handleFileInput}></input>
+            <input className='border border-1 border-secondary-subtle rounded-1' type='file' accept='json' onChange={handleFileInput}></input>
             <Button variant='secondary' onClick={() => loadListJSON(-1)}>
               Create New List
             </Button>

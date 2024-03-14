@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { MdCancel } from 'react-icons/md';
+import { MdClose } from 'react-icons/md';
 import ItemProperty from '../../interfaces/IItemProperty';
 import MultiSelectDropdown from '../MultiSelectDropdown';
 import { Group } from '../../interfaces';
+import '../../styles/ControlMenu.css';
 
 interface Props {
   groups: Group[];
@@ -38,9 +39,9 @@ function AddItemControl({ groups, properties, addItem, onCancel }: Props) {
   };
 
   return (
-    <>
+    <div className='controlMenu'>
       <a onClick={handleCancel}>
-        <MdCancel />
+        <MdClose />
       </a>
       <input type='text' value={inputName} onChange={(e) => setInputName(e.currentTarget.value)}></input>
       <MultiSelectDropdown
@@ -53,8 +54,8 @@ function AddItemControl({ groups, properties, addItem, onCancel }: Props) {
       </MultiSelectDropdown>
       {properties.map((property, index) => {
         return (
-          <div key={property}>
-            {property && <p>{property}: </p>}
+          <div key={property} className='d-flex flex-row align-items-center justify-content-end gap-2 w-100'>
+            <p className='my-0'>{property}: </p>
             <input
               type='text'
               value={inputProperties[index]}
@@ -70,7 +71,7 @@ function AddItemControl({ groups, properties, addItem, onCancel }: Props) {
       <Button variant='secondary' onClick={handleSubmit}>
         Add Item
       </Button>
-    </>
+    </div>
   );
 }
 

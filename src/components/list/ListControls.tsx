@@ -1,12 +1,12 @@
 import Button from 'react-bootstrap/Button';
-import '../../styles/ListControls.css';
+import '../../styles/ControlMenu.css';
 import { useState } from 'react';
 import { ItemProperty, Group } from '../../interfaces';
 import AddControl from './AddControl';
 import AddItemControl from './AddItemControl';
 import AddGroupControl from './AddGroupControl';
 import MultiSelectDropdown from '../MultiSelectDropdown';
-import { MdCancel } from 'react-icons/md';
+import { MdClose } from 'react-icons/md';
 
 interface Props {
   groups: Group[];
@@ -66,16 +66,18 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty, dele
           </AddControl>
         )}
         {propertyDeleteMode && (
-          <>
+          <div className='controlMenu'>
             <a onClick={() => setPropertyDeleteMode(false)}>
-              <MdCancel />
+              <MdClose />
             </a>
             <MultiSelectDropdown
               options={properties.map((prop, index) => {
                 return { id: index, label: prop, default: false };
               })}
               onChange={setPropertyDeleteSelections}
-            ></MultiSelectDropdown>
+            >
+              Property Selections
+            </MultiSelectDropdown>
             <Button
               variant='secondary'
               onClick={() => {
@@ -89,7 +91,7 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty, dele
             >
               Delete Properties
             </Button>
-          </>
+          </div>
         )}
         {!groupAddMode && !itemAddMode && !propertyAddMode && !propertyDeleteMode && (
           <div className='d-flex flex-row gap-2'>

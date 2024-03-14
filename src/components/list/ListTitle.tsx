@@ -11,7 +11,7 @@ function ListTitle({ children, editTitle }: Props) {
 
   return (
     <div className='d-flex flex-row align-items-center gap-1'>
-      {!editMode && <p className='fs-3 mb-0 ms-2 fw-bold'>{children}</p>}
+      {!editMode && <p className='fs-1 mb-0 ms-2 fw-bold'>{children}</p>}
       {editMode && (
         <input
           type='text'

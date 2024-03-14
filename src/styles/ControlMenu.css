@@ -1,0 +1,10 @@
+.controlMenu {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 0.25rem;
+  border: 3px solid var(--bs-secondary-border-subtle);
+  border-radius: 0.5rem;
+  background-color: var(--bs-dark-bg-subtle);
+  padding: 0 0.5rem 0.5rem 0.5rem;
+}

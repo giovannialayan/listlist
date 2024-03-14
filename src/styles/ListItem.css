@@ -1,14 +1,3 @@
-.listItem {
-  display: flex !important;
-  flex-flow: column nowrap;
-}
-
-.itemTop {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-}
-
 .dragOver {
-  border-bottom: 1px solid red !important;
+  background-color: gray !important;
 }

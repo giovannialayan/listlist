@@ -12,7 +12,7 @@ import {
   itemPropertySort,
 } from '../utils';
 import { FaArrowLeft } from 'react-icons/fa';
-import { MdOutlineSave } from 'react-icons/md';
+import { MdDelete, MdOutlineSave } from 'react-icons/md';
 import { Button, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import _ from 'lodash';
@@ -380,16 +380,16 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
 
   return (
     <div className='d-flex flex-column align-items-center gap-3'>
-      <div>
-        <a onClick={() => setCurrentPage(0)}>
-          <FaArrowLeft />
+      <div className='d-flex flex-row align-items-center gap-4 position-absolute top-0 start-0 ps-4 pt-3'>
+        <a role='button' onClick={() => setCurrentPage(0)}>
+          <FaArrowLeft size={'2em'} />
         </a>
-        <a onClick={downloadList}>
-          <MdOutlineSave />
+        <a role='button' onClick={downloadList}>
+          <MdOutlineSave size={'2em'} />
         </a>
-        <Button variant='secondary' onClick={() => setShowDeleteConfirm(true)}>
-          Delete List
-        </Button>
+        <a role='button' onClick={() => setShowDeleteConfirm(true)}>
+          <MdDelete size={'2em'} />
+        </a>
       </div>
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
       <ListControls

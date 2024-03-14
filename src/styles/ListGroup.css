@@ -1,15 +1,9 @@
-.group {
-  /* border: 1px solid black; */
-}
-
-.subGroup {
-  /* border: 1px solid gray; */
-}
-
 .groupTop {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .groupDragOver {

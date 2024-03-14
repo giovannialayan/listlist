@@ -44,12 +44,18 @@ function MultiSelectDropdown({ options, onChange, children = 'Select Options' }:
         onClick={() => {
           setIsOpen(!isOpen);
         }}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            setIsOpen(false);
+          }
+        }}
       >
         {children}
       </button>
       <div className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby='multiSelectDropdown'>
         {options.map((option) => (
           <Form.Check
+            className='mx-2'
             key={option.id}
             type='checkbox'
             id={`option_${option.id}`}
@@ -57,6 +63,13 @@ function MultiSelectDropdown({ options, onChange, children = 'Select Options' }:
             checked={selectedOptions.includes(option.id)}
             onChange={(e) => handleOptionChange(option.id, e.currentTarget.checked)}
             value={option.id}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setIsOpen(false);
+              } else if (e.key === 'Enter') {
+                handleOptionChange(option.id, e.currentTarget.checked);
+              }
+            }}
           />
         ))}
       </div>

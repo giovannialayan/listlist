@@ -13,7 +13,7 @@ interface Props {
 
 function ListGroupSettings({ groupId, settings, properties, editGroupSettings, sortItems, deleteGroup }: Props) {
   return (
-    <div>
+    <div className='d-flex flex-column align-items-center gap-2 mt-1'>
       <Checkbox
         checked={settings.numbered}
         onChange={() => {
@@ -22,7 +22,7 @@ function ListGroupSettings({ groupId, settings, properties, editGroupSettings, s
       >
         numbered
       </Checkbox>
-      <div>
+      <div className='d-flex flex-column align-items-center gap-2'>
         <DropdownButton variant='secondary' title={'Sort items by: ' + (settings.sortByProperty === '' ? 'Item Name' : settings.sortByProperty)}>
           <Dropdown.Item onClick={() => editGroupSettings(groupId, { ...settings, sortByProperty: '' })}>Item Name</Dropdown.Item>
           {properties.map((property, index) => {
@@ -39,7 +39,7 @@ function ListGroupSettings({ groupId, settings, properties, editGroupSettings, s
             editGroupSettings(groupId, { ...settings, sortAscending: !settings.sortAscending });
           }}
         >
-          sort {settings.sortAscending ? 'ascending' : 'descending'}
+          Sort mode: {settings.sortAscending ? 'Ascending' : 'Descending'}
         </Button>
         <Button variant='secondary' onClick={() => sortItems(groupId)}>
           Sort

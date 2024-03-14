@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
-import { MdCancel } from 'react-icons/md';
-import '../../styles/AddGroupControl.css';
+import { MdClose } from 'react-icons/md';
+import '../../styles/ControlMenu.css';
 import { Group } from '../../interfaces';
+import Checkbox from '../Checkbox';
 
 interface Props {
   groups: Group[];
@@ -27,9 +28,9 @@ function AddGroupControl({ groups, onSubmit, onCancel }: Props) {
   };
 
   return (
-    <div>
+    <div className='controlMenu'>
       <a onClick={handleCancel}>
-        <MdCancel />
+        <MdClose />
       </a>
       <input
         type='text'
@@ -45,14 +46,14 @@ function AddGroupControl({ groups, onSubmit, onCancel }: Props) {
         autoFocus
       ></input>
       <div>
-        <input
-          type='checkbox'
+        <Checkbox
           checked={subGroupsChecked}
-          onChange={(e) => {
-            setSubGroupsChecked(e.currentTarget.checked);
+          onChange={() => {
+            setSubGroupsChecked(!subGroupsChecked);
           }}
-        ></input>
-        <label>sub group</label>
+        >
+          sub group
+        </Checkbox>
       </div>
       {subGroupsChecked && (
         <DropdownButton variant='secondary' title={'Parent Group: ' + groups[parentGroup].name}>

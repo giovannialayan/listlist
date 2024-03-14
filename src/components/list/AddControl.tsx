@@ -1,6 +1,6 @@
 import { Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { MdCancel } from 'react-icons/md';
+import { MdClose } from 'react-icons/md';
 import MultiSelectDropdown from '../MultiSelectDropdown';
 
 interface Props {
@@ -28,9 +28,9 @@ function AddControl({ children, dropdownOptions = [], disallowedInputs = [], onS
   };
 
   return (
-    <>
+    <div className='controlMenu'>
       <a onClick={handleCancel}>
-        <MdCancel />
+        <MdClose />
       </a>
       <input
         type='text'
@@ -61,7 +61,7 @@ function AddControl({ children, dropdownOptions = [], disallowedInputs = [], onS
       >
         {children}
       </Button>
-    </>
+    </div>
   );
 }
 

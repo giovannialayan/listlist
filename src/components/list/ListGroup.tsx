@@ -68,7 +68,7 @@ function ListGroup({
         <div draggable>
           <MdDragHandle />
         </div>
-        {!editMode && <h5>{group.name}</h5>}
+        {!editMode && <p className='fs-3 fw-bold mb-0'>{group.name}</p>}
         {editMode && (
           <input
             value={group.name}
@@ -106,7 +106,7 @@ function ListGroup({
           }}
         ></ListGroupSettings>
       </div>
-      <div className={group.settings.collapse ? ' collapse' : ''}>
+      <div className={' flex-column align-items-center' + (group.settings.collapse ? ' collapse' : 'd-flex')}>
         {group.size !== 0 && (
           <ul className={'list-group list-group-flush'}>
             {items.map((item) => {

@@ -61,7 +61,7 @@ function ListSubGroup({
         <div draggable>
           <MdDragHandle />
         </div>
-        {!editMode && <p>{subGroup.name}</p>}
+        {!editMode && <p className='fs-5 fw-bold mb-0'>{subGroup.name}</p>}
         {editMode && (
           <input
             value={subGroup.name}
