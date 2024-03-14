@@ -23,7 +23,7 @@ function ListGroupSettings({ groupId, settings, properties, editGroupSettings, s
         numbered
       </Checkbox>
       <div>
-        <DropdownButton title={'Sort items by: ' + (settings.sortByProperty === '' ? 'Item Name' : settings.sortByProperty)}>
+        <DropdownButton variant='secondary' title={'Sort items by: ' + (settings.sortByProperty === '' ? 'Item Name' : settings.sortByProperty)}>
           <Dropdown.Item onClick={() => editGroupSettings(groupId, { ...settings, sortByProperty: '' })}>Item Name</Dropdown.Item>
           {properties.map((property, index) => {
             return (
@@ -34,13 +34,16 @@ function ListGroupSettings({ groupId, settings, properties, editGroupSettings, s
           })}
         </DropdownButton>
         <Button
+          variant='secondary'
           onClick={() => {
             editGroupSettings(groupId, { ...settings, sortAscending: !settings.sortAscending });
           }}
         >
           sort {settings.sortAscending ? 'ascending' : 'descending'}
         </Button>
-        <Button onClick={() => sortItems(groupId)}>Sort</Button>
+        <Button variant='secondary' onClick={() => sortItems(groupId)}>
+          Sort
+        </Button>
         <Checkbox
           checked={settings.autoSort}
           onChange={() => {
@@ -50,7 +53,9 @@ function ListGroupSettings({ groupId, settings, properties, editGroupSettings, s
           sort when adding item
         </Checkbox>
       </div>
-      <Button onClick={() => deleteGroup(groupId)}>Delete Group</Button>
+      <Button variant='secondary' onClick={() => deleteGroup(groupId)}>
+        Delete Group
+      </Button>
     </div>
   );
 }

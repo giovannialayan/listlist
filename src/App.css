@@ -8,3 +8,19 @@
   flex-flow: column nowrap;
   align-items: center;
 }
+
+.toggleThemeButton {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  color: white;
+}
+
+.toggleThemeButton:hover {
+  color: gray;
+}
+
+.toggleThemeButton > svg {
+  width: 2em;
+  height: 2em;
+}

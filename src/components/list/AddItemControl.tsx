@@ -67,7 +67,9 @@ function AddItemControl({ groups, properties, addItem, onCancel }: Props) {
           </div>
         );
       })}
-      <Button onClick={handleSubmit}>Add Item</Button>
+      <Button variant='secondary' onClick={handleSubmit}>
+        Add Item
+      </Button>
     </>
   );
 }

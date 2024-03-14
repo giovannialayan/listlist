@@ -25,7 +25,7 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty, dele
   const [propertyDeleteSelections, setPropertyDeleteSelections] = useState([] as number[]);
 
   return (
-    <div className='container-fluid'>
+    <div className='d-flex flex-row gap-2'>
       <div>
         {groupAddMode && (
           <AddGroupControl
@@ -41,6 +41,7 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty, dele
         )}
         {!groupAddMode && !itemAddMode && !propertyAddMode && !propertyDeleteMode && (
           <Button
+            variant='secondary'
             onClick={() => {
               setGroupAddMode(true);
             }}
@@ -76,6 +77,7 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty, dele
               onChange={setPropertyDeleteSelections}
             ></MultiSelectDropdown>
             <Button
+              variant='secondary'
               onClick={() => {
                 deleteProperties(
                   propertyDeleteSelections.map((selection) => {
@@ -90,8 +92,9 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty, dele
           </>
         )}
         {!groupAddMode && !itemAddMode && !propertyAddMode && !propertyDeleteMode && (
-          <>
+          <div className='d-flex flex-row gap-2'>
             <Button
+              variant='secondary'
               onClick={() => {
                 setPropertyAddMode(true);
               }}
@@ -99,13 +102,14 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty, dele
               New Property
             </Button>
             <Button
+              variant='secondary'
               onClick={() => {
                 setPropertyDeleteMode(true);
               }}
             >
               Delete Property
             </Button>
-          </>
+          </div>
         )}
       </div>
       <div>
@@ -121,6 +125,7 @@ function ListControls({ groups, properties, addGroup, addItem, addProperty, dele
         )}
         {!groupAddMode && !itemAddMode && !propertyAddMode && !propertyDeleteMode && (
           <Button
+            variant='secondary'
             disabled={groups.length === 0}
             onClick={() => {
               setItemAddMode(true);

@@ -379,7 +379,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
   };
 
   return (
-    <>
+    <div className='d-flex flex-column align-items-center gap-3'>
       <div>
         <a onClick={() => setCurrentPage(0)}>
           <FaArrowLeft />
@@ -387,7 +387,9 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
         <a onClick={downloadList}>
           <MdOutlineSave />
         </a>
-        <Button onClick={() => setShowDeleteConfirm(true)}>Delete List</Button>
+        <Button variant='secondary' onClick={() => setShowDeleteConfirm(true)}>
+          Delete List
+        </Button>
       </div>
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
       <ListControls
@@ -412,11 +414,15 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
       <Modal show={showDeleteConfirm} onHide={() => setShowDeleteConfirm(false)}>
         <Modal.Body>Are you sure you want to delete {listData.title}?</Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => setShowDeleteConfirm(false)}>No, don't delete</Button>
-          <Button onClick={() => deleteList(listData.id)}>Yes, delete</Button>
+          <Button variant='secondary' onClick={() => setShowDeleteConfirm(false)}>
+            No, don't delete
+          </Button>
+          <Button variant='secondary' onClick={() => deleteList(listData.id)}>
+            Yes, delete
+          </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 }
 

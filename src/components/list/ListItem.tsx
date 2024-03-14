@@ -108,8 +108,11 @@ function ListItem({ item, parentGroup, groupSettings, editItem, deleteItem, onDr
             </p>
           );
         })}
-        <Button onClick={() => deleteItem(item.id, parentGroup)}>Remove</Button>
+        <Button variant='secondary' onClick={() => deleteItem(item.id, parentGroup)}>
+          Remove
+        </Button>
         <Button
+          variant='secondary'
           onClick={() => {
             deleteItem(item.id, -1);
             setEditMode(false);

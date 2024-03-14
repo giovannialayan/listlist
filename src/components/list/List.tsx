@@ -85,7 +85,7 @@ function List({ listData, editItemGroupPos, editItem, deleteItem, editGroup, del
   return (
     <div>
       <div>
-        <DropdownButton title={`Group: ${currentGroup === '' ? 'All Groups' : currentGroup}`}>
+        <DropdownButton variant='secondary' title={`Group: ${currentGroup === '' ? 'All Groups' : currentGroup}`}>
           <Dropdown.Item onClick={() => setCurrentGroup('')}>All Groups</Dropdown.Item>
           {listData.groups.map((group) => {
             return (

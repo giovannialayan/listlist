@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { MdEdit } from 'react-icons/md';
-import '../../styles/ListTitle.css';
 
 interface Props {
   children: string;
@@ -11,8 +10,8 @@ function ListTitle({ children, editTitle }: Props) {
   const [editMode, setEditMode] = useState(false);
 
   return (
-    <div className='titleContainer'>
-      {!editMode && <p>{children}</p>}
+    <div className='d-flex flex-row align-items-center gap-1'>
+      {!editMode && <p className='fs-3 mb-0 ms-2 fw-bold'>{children}</p>}
       {editMode && (
         <input
           type='text'
@@ -25,7 +24,7 @@ function ListTitle({ children, editTitle }: Props) {
           }}
         ></input>
       )}
-      <a onClick={() => setEditMode(!editMode)}>
+      <a role='button' onClick={() => setEditMode(!editMode)}>
         <MdEdit />
       </a>
     </div>

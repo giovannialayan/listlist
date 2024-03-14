@@ -55,7 +55,7 @@ function AddGroupControl({ groups, onSubmit, onCancel }: Props) {
         <label>sub group</label>
       </div>
       {subGroupsChecked && (
-        <DropdownButton title={'Parent Group: ' + groups[parentGroup].name}>
+        <DropdownButton variant='secondary' title={'Parent Group: ' + groups[parentGroup].name}>
           {groups.map((group) => {
             return (
               group.parent === -1 && (
@@ -67,7 +67,9 @@ function AddGroupControl({ groups, onSubmit, onCancel }: Props) {
           })}
         </DropdownButton>
       )}
-      <Button onClick={handleSubmit}>Add Group</Button>
+      <Button variant='secondary' onClick={handleSubmit}>
+        Add Group
+      </Button>
     </div>
   );
 }

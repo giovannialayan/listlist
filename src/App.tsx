@@ -4,6 +4,7 @@ import { ListData } from './interfaces';
 import ListPage from './pages/ListPage';
 import HomePage from './pages/HomePage';
 import _ from 'lodash';
+import { BsLightbulb, BsLightbulbFill } from 'react-icons/bs';
 
 const localStoragePrefix = 'listlist.';
 const listsKey = 'lists';
@@ -126,6 +127,7 @@ function App() {
   const [listTitles, setListTitles] = useState([] as string[]);
   const [currentPage, setCurrentPage] = useState(0);
   const shouldSave = useRef(false);
+  const [currentTheme, setCurrentTheme] = useState('dark');
 
   useEffect(() => {
     const lists = localStorage.getItem(localStoragePrefix + listsKey);
@@ -233,8 +235,22 @@ function App() {
     }
   };
 
+  const toggleTheme = () => {
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-bs-theme', 'light');
+      setCurrentTheme('light');
+    } else {
+      document.documentElement.setAttribute('data-bs-theme', 'dark');
+      setCurrentTheme('dark');
+    }
+  };
+
   return (
     <>
+      <a role='button' onClick={toggleTheme} className={`link-${currentTheme === 'dark' ? 'light' : 'dark'} toggleThemeButton`}>
+        {currentTheme === 'dark' && <BsLightbulb />}
+        {currentTheme === 'light' && <BsLightbulbFill />}
+      </a>
       {currentPage === 0 && <HomePage listTitles={listTitles} openList={openList} newList={newList} setCurrentPage={setCurrentPage}></HomePage>}
       {currentPage === 1 && (
         <ListPage

@@ -54,6 +54,7 @@ function AddControl({ children, dropdownOptions = [], disallowedInputs = [], onS
         ></MultiSelectDropdown>
       )}
       <Button
+        variant='secondary'
         onClick={() => {
           handleSubmit(inputText, dropdownSelections);
         }}
