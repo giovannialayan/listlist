@@ -378,6 +378,38 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
     saveMode(true);
   };
 
+  const addItemToGroup = (itemId: number, groupId: number) => {
+    const nextItems = listData.items.slice();
+
+    nextItems[itemId].groups.push(groupId);
+    nextItems[itemId].groupPositions = { ...nextItems[itemId].groupPositions, [groupId]: listData.groups[groupId].size };
+
+    if (listData.groups[groupId].settings.autoSort) {
+      const groupItems = getGroupItems(nextItems, groupId).sort((a, b) => itemPropertySort(a, b, listData.groups[groupId].settings.sortByProperty));
+      if (!listData.groups[groupId].settings.sortAscending) {
+        groupItems.reverse();
+      }
+
+      for (let i = 0; i < groupItems.length; i++) {
+        groupItems[i].groupPositions = { ...groupItems[i].groupPositions, [groupId]: i };
+      }
+    }
+
+    setListData({
+      ...listData,
+      groups: listData.groups.map((group) => {
+        if (group.id === groupId) {
+          return { ...group, size: group.size + 1 };
+        } else {
+          return group;
+        }
+      }),
+      items: nextItems,
+    });
+
+    saveMode(true);
+  };
+
   return (
     <div className='d-flex flex-column align-items-center gap-3'>
       <div className='d-flex flex-row align-items-center gap-4 position-fixed top-0 start-0 ps-4 pt-3'>
@@ -405,6 +437,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
         editItemGroupPos={editItemGroupPos}
         editItem={editItem}
         deleteItem={deleteItem}
+        addItemToGroup={addItemToGroup}
         editGroup={editGroup}
         deleteGroup={deleteGroup}
         editGroupPos={editGroupPos}

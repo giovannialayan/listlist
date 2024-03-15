@@ -10,11 +10,13 @@ interface Props {
   subGroup: Group;
   items: Item[];
   properties: string[];
+  allGroups: Group[];
   dropGroup: number;
   dragOverItem: Item;
   groupDragOver: boolean;
   editItem: (item: number, editedItem: Item) => void;
   deleteItem: (itemId: number, groupId: number) => void;
+  addItemToGroup: (itemId: number, groupId: number) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
   deleteGroup: (groupId: number) => void;
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
@@ -31,11 +33,13 @@ function ListSubGroup({
   subGroup,
   items,
   properties,
+  allGroups,
   dropGroup,
   dragOverItem,
   groupDragOver,
   editItem,
   deleteItem,
+  addItemToGroup,
   editGroup,
   deleteGroup,
   editGroupSettings,
@@ -105,8 +109,10 @@ function ListSubGroup({
                 item={item}
                 parentGroup={subGroup.id}
                 groupSettings={subGroup.settings}
+                allGroups={allGroups}
                 editItem={editItem}
                 deleteItem={deleteItem}
+                addItemToGroup={addItemToGroup}
                 onDragStart={onItemDragStart}
                 onDragEnter={onItemDragEnter}
                 onDragEnd={onItemDragEnd}

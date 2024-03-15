@@ -10,6 +10,7 @@ interface Props {
   editItemGroupPos: (item: Item, group: number, prevPos: number, newPos: number) => void;
   editItem: (item: number, editedItem: Item) => void;
   deleteItem: (itemId: number, groupId: number) => void;
+  addItemToGroup: (itemId: number, groupId: number) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
   deleteGroup: (groupId: number) => void;
   editGroupPos: (groupId: number, prevPos: number, newPos: number) => void;
@@ -17,7 +18,18 @@ interface Props {
   sortItems: (groupId: number) => void;
 }
 
-function List({ listData, editItemGroupPos, editItem, deleteItem, editGroup, deleteGroup, editGroupPos, editGroupSettings, sortItems }: Props) {
+function List({
+  listData,
+  editItemGroupPos,
+  editItem,
+  deleteItem,
+  addItemToGroup,
+  editGroup,
+  deleteGroup,
+  editGroupPos,
+  editGroupSettings,
+  sortItems,
+}: Props) {
   const [currentGroup, setCurrentGroup] = useState('');
 
   const [dropGroup, setDropGroup] = useState(-1);
@@ -113,8 +125,10 @@ function List({ listData, editItemGroupPos, editItem, deleteItem, editGroup, del
                     return { ...acc, [cur]: getGroupItems(listData.items, cur).sort((a, b) => itemPositionSort(a, b, cur)) };
                   }, {})}
                   properties={listData.properties}
+                  allGroups={listData.groups}
                   editItem={editItem}
                   deleteItem={deleteItem}
+                  addItemToGroup={addItemToGroup}
                   editGroup={editGroup}
                   deleteGroup={deleteGroup}
                   editGroupSettings={editGroupSettings}

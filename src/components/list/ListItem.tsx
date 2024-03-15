@@ -1,24 +1,38 @@
 import { MdDragHandle } from 'react-icons/md';
-import { GroupSettings, Item } from '../../interfaces';
+import { GroupSettings, Item, Group } from '../../interfaces';
 import '../../styles/ListItem.css';
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
-import { Button } from 'react-bootstrap';
+import { Button, DropdownButton, Dropdown } from 'react-bootstrap';
 
 interface Props {
   item: Item;
   parentGroup: number;
   groupSettings: GroupSettings;
+  allGroups: Group[];
   editItem: (item: number, editedItem: Item) => void;
   deleteItem: (itemId: number, groupId: number) => void;
+  addItemToGroup: (itemId: number, groupId: number) => void;
   onDragStart: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onDragEnter: (item: Item, parentGroup: number, event: React.DragEvent) => void;
   onDragEnd: (event: React.DragEvent) => void;
   dragOver: boolean;
 }
 
-function ListItem({ item, parentGroup, groupSettings, editItem, deleteItem, onDragStart, onDragEnter, onDragEnd, dragOver }: Props) {
+function ListItem({
+  item,
+  parentGroup,
+  groupSettings,
+  allGroups,
+  editItem,
+  deleteItem,
+  addItemToGroup,
+  onDragStart,
+  onDragEnter,
+  onDragEnd,
+  dragOver,
+}: Props) {
   const [propertiesVisible, setPropertiesVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -105,6 +119,17 @@ function ListItem({ item, parentGroup, groupSettings, editItem, deleteItem, onDr
           })}
         </div>
         <div className='d-flex flex-row gap-4'>
+          <DropdownButton variant='secondary' title={'Add To Group'} disabled={allGroups.length === item.groups.length}>
+            {allGroups
+              .filter((group) => !item.groups.includes(group.id))
+              .map((group) => {
+                return (
+                  <Dropdown.Item key={group.id} onClick={() => addItemToGroup(item.id, group.id)}>
+                    {group.name}
+                  </Dropdown.Item>
+                );
+              })}
+          </DropdownButton>
           <Button variant='secondary' onClick={() => deleteItem(item.id, parentGroup)}>
             Remove
           </Button>

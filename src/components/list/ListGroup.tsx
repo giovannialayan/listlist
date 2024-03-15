@@ -13,12 +13,14 @@ interface Props {
   items: Item[];
   subGroupItems: { [key: string]: Item[] };
   properties: string[];
+  allGroups: Group[];
   dropGroup: number;
   dragOverItem: Item;
   dragOverGroup: number;
   groupDropParent: number;
   editItem: (item: number, editedItem: Item) => void;
   deleteItem: (itemId: number, groupId: number) => void;
+  addItemToGroup: (itemId: number, groupId: number) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
   deleteGroup: (groupId: number) => void;
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
@@ -37,12 +39,14 @@ function ListGroup({
   items,
   subGroupItems,
   properties,
+  allGroups,
   dropGroup,
   dragOverItem,
   dragOverGroup,
   groupDropParent,
   editItem,
   deleteItem,
+  addItemToGroup,
   editGroup,
   deleteGroup,
   editGroupSettings,
@@ -116,8 +120,10 @@ function ListGroup({
                   item={item}
                   parentGroup={group.id}
                   groupSettings={group.settings}
+                  allGroups={allGroups}
                   editItem={editItem}
                   deleteItem={deleteItem}
+                  addItemToGroup={addItemToGroup}
                   onDragStart={onItemDragStart}
                   onDragEnter={onItemDragEnter}
                   onDragEnd={onItemDragEnd}
@@ -134,12 +140,14 @@ function ListGroup({
               subGroup={subGroup}
               items={subGroupItems[subGroup.id]}
               properties={properties}
+              allGroups={allGroups}
               dropGroup={dropGroup}
               dragOverItem={dragOverItem}
-              editGroup={editGroup}
               editItem={editItem}
-              deleteGroup={deleteGroup}
               deleteItem={deleteItem}
+              addItemToGroup={addItemToGroup}
+              deleteGroup={deleteGroup}
+              editGroup={editGroup}
               editGroupSettings={editGroupSettings}
               sortItems={sortItems}
               onItemDragStart={onItemDragStart}
