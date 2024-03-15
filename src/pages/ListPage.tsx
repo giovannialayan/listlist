@@ -380,7 +380,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
 
   return (
     <div className='d-flex flex-column align-items-center gap-3'>
-      <div className='d-flex flex-row align-items-center gap-4 position-absolute top-0 start-0 ps-4 pt-3'>
+      <div className='d-flex flex-row align-items-center gap-4 position-fixed top-0 start-0 ps-4 pt-3'>
         <a role='button' onClick={() => setCurrentPage(0)}>
           <FaArrowLeft size={'1.75em'} />
         </a>

@@ -10,7 +10,7 @@
 }
 
 .toggleThemeButton {
-  position: absolute;
+  position: fixed;
   top: 1em;
   right: 1em;
   color: white;
@@ -21,7 +21,7 @@
 }
 
 .kofiButton {
-  position: absolute;
+  position: fixed;
   bottom: 1em;
   left: 1em;
 }
