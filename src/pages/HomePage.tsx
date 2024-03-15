@@ -32,7 +32,7 @@ function HomePage({ listTitles, openList, newList, setCurrentPage }: Props) {
     fileReader.onload = () => {
       if (fileReader.result) {
         const fileListData = JSON.parse(fileReader.result as string);
-        console.log(fileListData);
+
         if (fileListData) {
           newList(fileListData, index);
           if (replaceMode) {

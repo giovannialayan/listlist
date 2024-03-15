@@ -73,12 +73,14 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
           getGroupItems(newItemArr, itemGroups[i]).sort((a, b) => itemPropertySort(a, b, listData.groups[itemGroups[i]].settings.sortByProperty))
         );
 
+        const groupItemsIndex = groupItems.length - 1;
+
         if (!listData.groups[itemGroups[i]].settings.sortAscending) {
-          groupItems[i].reverse();
+          groupItems[groupItemsIndex].reverse();
         }
 
-        for (let j = 0; j < groupItems[i].length; j++) {
-          groupItems[i][j].groupPositions = { ...groupItems[i][j].groupPositions, [itemGroups[i]]: j };
+        for (let j = 0; j < groupItems[groupItemsIndex].length; j++) {
+          groupItems[groupItemsIndex][j].groupPositions = { ...groupItems[groupItemsIndex][j].groupPositions, [itemGroups[groupItemsIndex]]: j };
         }
       }
     }
