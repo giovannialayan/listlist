@@ -17,6 +17,7 @@ interface Props {
   editItem: (item: number, editedItem: Item) => void;
   deleteItem: (itemId: number, groupId: number) => void;
   addItemToGroup: (itemId: number, groupId: number) => void;
+  editItemGroupPos: (editItem: Item, groupId: number, prevPos: number, newPos: number) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
   deleteGroup: (groupId: number) => void;
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
@@ -40,6 +41,7 @@ function ListSubGroup({
   editItem,
   deleteItem,
   addItemToGroup,
+  editItemGroupPos,
   editGroup,
   deleteGroup,
   editGroupSettings,
@@ -55,15 +57,15 @@ function ListSubGroup({
 
   return (
     <div
-      className={'subGroup' + (groupDragOver ? ' groupDragOver' : '')}
+      className={'subGroup flex-grow-1' + (groupDragOver ? ' groupDragOver' : '')}
       onDragStart={(e) => onGroupDragStart(subGroup.id, subGroup.parent, e)}
       onDragEnter={(e) => onGroupDragEnter(subGroup.id, subGroup.parent, e)}
       onDragEnd={onGroupDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
       <div className='groupTop'>
-        <div draggable>
-          <MdDragHandle />
+        <div role='button' draggable className={subGroup.settings.numbered ? 'dragHandleLarge' : ''}>
+          <MdDragHandle size={'1.5em'} />
         </div>
         {!editMode && <p className='fs-5 fw-bold mb-0'>{subGroup.name}</p>}
         {editMode && (
@@ -74,21 +76,25 @@ function ListSubGroup({
             }}
           ></input>
         )}
-        <a
-          onClick={() => {
-            editGroupSettings(subGroup.id, { ...subGroup.settings, collapse: !subGroup.settings.collapse });
-          }}
-        >
-          {subGroup.settings.collapse && <IoIosArrowDown />}
-          {!subGroup.settings.collapse && <IoIosArrowUp />}
-        </a>
-        <a
-          onClick={() => {
-            setEditMode(!editMode);
-          }}
-        >
-          <MdEdit />
-        </a>
+        <div className='d-flex flex-row gap-1'>
+          <a
+            role='button'
+            onClick={() => {
+              editGroupSettings(subGroup.id, { ...subGroup.settings, collapse: !subGroup.settings.collapse });
+            }}
+          >
+            {subGroup.settings.collapse && <IoIosArrowDown size={'1.25em'} />}
+            {!subGroup.settings.collapse && <IoIosArrowUp size={'1.25em'} />}
+          </a>
+          <a
+            role='button'
+            onClick={() => {
+              setEditMode(!editMode);
+            }}
+          >
+            <MdEdit size={'1.25em'} />
+          </a>
+        </div>
       </div>
       <div className={editMode ? '' : 'collapse'}>
         <ListGroupSettings
@@ -113,6 +119,7 @@ function ListSubGroup({
                 editItem={editItem}
                 deleteItem={deleteItem}
                 addItemToGroup={addItemToGroup}
+                editItemGroupPos={editItemGroupPos}
                 onDragStart={onItemDragStart}
                 onDragEnter={onItemDragEnter}
                 onDragEnd={onItemDragEnd}

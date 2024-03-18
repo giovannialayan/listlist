@@ -21,6 +21,7 @@ interface Props {
   editItem: (item: number, editedItem: Item) => void;
   deleteItem: (itemId: number, groupId: number) => void;
   addItemToGroup: (itemId: number, groupId: number) => void;
+  editItemGroupPos: (editItem: Item, groupId: number, prevPos: number, newPos: number) => void;
   editGroup: (groupId: number, editedGroup: Group) => void;
   deleteGroup: (groupId: number) => void;
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
@@ -47,6 +48,7 @@ function ListGroup({
   editItem,
   deleteItem,
   addItemToGroup,
+  editItemGroupPos,
   editGroup,
   deleteGroup,
   editGroupSettings,
@@ -62,6 +64,7 @@ function ListGroup({
 
   return (
     <div
+      id={`g${group.id}`}
       className={'group' + (dragOverGroup === group.id ? ' groupDragOver' : '')}
       onDragStart={(e) => onGroupDragStart(group.id, group.parent, e)}
       onDragEnter={(e) => onGroupDragEnter(group.id, group.parent, e)}
@@ -69,8 +72,8 @@ function ListGroup({
       onDragOver={(e) => e.preventDefault()}
     >
       <div className='groupTop'>
-        <div draggable>
-          <MdDragHandle />
+        <div role='button' draggable className={group.settings.numbered ? 'dragHandleLarge' : ''}>
+          <MdDragHandle size={'1.5em'} />
         </div>
         {!editMode && <p className='fs-3 fw-bold mb-0'>{group.name}</p>}
         {editMode && (
@@ -81,21 +84,25 @@ function ListGroup({
             }}
           ></input>
         )}
-        <a
-          onClick={() => {
-            editGroupSettings(group.id, { ...group.settings, collapse: !group.settings.collapse });
-          }}
-        >
-          {group.settings.collapse && <IoIosArrowDown />}
-          {!group.settings.collapse && <IoIosArrowUp />}
-        </a>
-        <a
-          onClick={() => {
-            setEditMode(!editMode);
-          }}
-        >
-          <MdEdit />
-        </a>
+        <div className='d-flex flex-row gap-1'>
+          <a
+            role='button'
+            onClick={() => {
+              editGroupSettings(group.id, { ...group.settings, collapse: !group.settings.collapse });
+            }}
+          >
+            {group.settings.collapse && <IoIosArrowDown size={'1.25em'} />}
+            {!group.settings.collapse && <IoIosArrowUp size={'1.25em'} />}
+          </a>
+          <a
+            role='button'
+            onClick={() => {
+              setEditMode(!editMode);
+            }}
+          >
+            <MdEdit size={'1.25em'} />
+          </a>
+        </div>
       </div>
       <div className={editMode ? '' : 'collapse'}>
         <ListGroupSettings
@@ -110,7 +117,7 @@ function ListGroup({
           }}
         ></ListGroupSettings>
       </div>
-      <div className={' flex-column align-items-center' + (group.settings.collapse ? ' collapse' : 'd-flex')}>
+      <div className={'flex-column align-items-center' + (group.settings.collapse ? ' collapse' : ' d-flex')}>
         {group.size !== 0 && (
           <ul className={'list-group list-group-flush'}>
             {items.map((item) => {
@@ -128,6 +135,7 @@ function ListGroup({
                   onDragEnter={onItemDragEnter}
                   onDragEnd={onItemDragEnd}
                   dragOver={group.id === dropGroup && item == dragOverItem}
+                  editItemGroupPos={editItemGroupPos}
                 ></ListItem>
               );
             })}
@@ -146,6 +154,7 @@ function ListGroup({
               editItem={editItem}
               deleteItem={deleteItem}
               addItemToGroup={addItemToGroup}
+              editItemGroupPos={editItemGroupPos}
               deleteGroup={deleteGroup}
               editGroup={editGroup}
               editGroupSettings={editGroupSettings}

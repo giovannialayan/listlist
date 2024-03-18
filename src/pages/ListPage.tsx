@@ -14,7 +14,7 @@ import {
 import { FaArrowLeft } from 'react-icons/fa';
 import { MdDelete, MdOutlineSave } from 'react-icons/md';
 import { Button, Modal } from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 
 interface Props {
@@ -28,6 +28,21 @@ interface Props {
 
 function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadList, deleteList }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [scrollTarget, setScrollTarget] = useState('');
+
+  useEffect(() => {
+    const scrollElement = document.getElementById(scrollTarget);
+
+    if (scrollElement) {
+      const rect = scrollElement.getBoundingClientRect();
+      const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+      const elementNotInView = rect.bottom < 0 || rect.top - viewHeight >= 0;
+
+      if (elementNotInView) {
+        scrollElement.scrollIntoView();
+      }
+    }
+  }, [scrollTarget]);
 
   const addGroup = (groupName: string, parentGroup: number) => {
     const newGroup: Group = {
@@ -113,6 +128,11 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
   };
 
   const editItemGroupPos = (editItem: Item, groupId: number, prevPos: number, newPos: number) => {
+    //not allowed
+    if (newPos < 0 || newPos >= listData.groups[groupId].size) {
+      return;
+    }
+
     let itemsInGroup = getGroupItems(listData.items, groupId);
 
     itemsInGroup.sort((a, b) => itemPositionSort(a, b, groupId));
@@ -130,6 +150,8 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
     });
 
     saveMode(true);
+
+    setScrollTarget(`i${editItem.id}-g${groupId}`);
   };
 
   const editItem = (itemId: number, editedItem: Item) => {

@@ -132,6 +132,7 @@ function List({
                   editGroup={editGroup}
                   deleteGroup={deleteGroup}
                   editGroupSettings={editGroupSettings}
+                  editItemGroupPos={editItemGroupPos}
                   sortItems={sortItems}
                   onItemDragStart={onItemDragStart}
                   onItemDragEnter={onItemDragEnter}
