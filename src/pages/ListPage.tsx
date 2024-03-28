@@ -1,6 +1,7 @@
 import ListTitle from '../components/list/ListTitle';
 import ListControls from '../components/list/ListControls';
 import List from '../components/list/List';
+import '../styles/ListPage.css';
 import { ListData, Item, ItemProperty, Group, GroupSettings } from '../interfaces';
 import {
   getGroupItems,
@@ -80,22 +81,19 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
     };
 
     const newItemArr = [...listData.items, newItem];
-    const groupItems: Item[][] = [];
 
     for (let i = 0; i < itemGroups.length; i++) {
       if (listData.groups[itemGroups[i]].settings.autoSort) {
-        groupItems.push(
-          getGroupItems(newItemArr, itemGroups[i]).sort((a, b) => itemPropertySort(a, b, listData.groups[itemGroups[i]].settings.sortByProperty))
+        const groupItems = getGroupItems(newItemArr, itemGroups[i]).sort((a, b) =>
+          itemPropertySort(a, b, listData.groups[itemGroups[i]].settings.sortByProperty)
         );
 
-        const groupItemsIndex = groupItems.length - 1;
-
         if (!listData.groups[itemGroups[i]].settings.sortAscending) {
-          groupItems[groupItemsIndex].reverse();
+          groupItems.reverse();
         }
 
-        for (let j = 0; j < groupItems[groupItemsIndex].length; j++) {
-          groupItems[groupItemsIndex][j].groupPositions = { ...groupItems[groupItemsIndex][j].groupPositions, [itemGroups[groupItemsIndex]]: j };
+        for (let j = 0; j < groupItems.length; j++) {
+          groupItems[j].groupPositions = { ...groupItems[j].groupPositions, [itemGroups[i]]: j };
         }
       }
     }
@@ -435,7 +433,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
   };
 
   return (
-    <div className='d-flex flex-column align-items-center gap-3'>
+    <div className='listPageContainer d-flex flex-column align-items-center gap-3'>
       <div className='d-flex flex-row align-items-center gap-4 position-fixed top-0 start-0 ps-4 pt-3'>
         <a role='button' onClick={() => setCurrentPage(0)}>
           <FaArrowLeft size={'1.75em'} />
