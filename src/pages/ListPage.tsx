@@ -17,6 +17,7 @@ import { MdDelete, MdOutlineSave } from 'react-icons/md';
 import { Button, Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import _ from 'lodash';
+import SideBar from '../components/SideBar/SideBar';
 
 interface Props {
   listData: ListData;
@@ -445,6 +446,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
           <MdDelete size={'1.75em'} />
         </a>
       </div>
+      <SideBar></SideBar>
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
       <ListControls
         groups={listData.groups}

@@ -23,7 +23,7 @@
 .kofiButton {
   position: fixed;
   bottom: 1em;
-  left: 1em;
+  right: 1em;
 }
 
 @media (max-width: 576px) {
