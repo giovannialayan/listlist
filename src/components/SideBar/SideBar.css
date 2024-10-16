@@ -4,4 +4,57 @@
   left: 5rem;
   top: 4rem;
   width: 30rem;
+  max-height: 90vh;
+  padding: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  overflow: auto;
+}
+
+.sidebar p {
+  margin-bottom: 0;
+}
+
+.sidebarTop {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+}
+
+.itemNumber {
+  font-size: 1.2rem;
+}
+
+.itemName {
+  font-size: 1.5rem;
+}
+
+.itemPropertiesContainer {
+  margin-bottom: 1rem;
+}
+
+.itemProp {
+  padding: 0.5rem;
+}
+
+.itemPropName {
+  font-weight: bold;
+}
+
+.itemPropValue {
+  text-align: left;
+}
+
+.itemPropLine {
+  width: 95%;
+  height: 2px;
+  background-color: #aaa;
+  margin: auto;
+  margin-top: 1rem;
 }
