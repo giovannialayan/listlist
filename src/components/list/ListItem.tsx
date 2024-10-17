@@ -19,6 +19,7 @@ interface Props {
   onDragEnd: (event: React.DragEvent) => void;
   dragOver: boolean;
   editItemGroupPos: (editItem: Item, groupId: number, prevPos: number, newPos: number) => void;
+  setSidebar: (item: Item, parentGroup: number) => void;
 }
 
 function ListItem({
@@ -34,6 +35,7 @@ function ListItem({
   onDragEnd,
   dragOver,
   editItemGroupPos,
+  setSidebar,
 }: Props) {
   const [propertiesVisible, setPropertiesVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -55,6 +57,7 @@ function ListItem({
       }}
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
+      onClick={() => setSidebar(item, parentGroup)}
     >
       <div className='d-flex flex-row justify-content-between align-items-center gap-3'>
         <div className='d-flex flex-row gap-2'>

@@ -16,6 +16,7 @@ interface Props {
   editGroupPos: (groupId: number, prevPos: number, newPos: number) => void;
   editGroupSettings: (groupId: number, newSettings: GroupSettings) => void;
   sortItems: (groupId: number) => void;
+  setSidebar: (item: Item, parentGroup: number) => void;
 }
 
 function List({
@@ -29,6 +30,7 @@ function List({
   editGroupPos,
   editGroupSettings,
   sortItems,
+  setSidebar,
 }: Props) {
   const [currentGroup, setCurrentGroup] = useState('');
 
@@ -144,6 +146,7 @@ function List({
                   onGroupDragEnd={onGroupDragEnd}
                   groupDropParent={subGroupDropParent}
                   dragOverGroup={dragOverGroup}
+                  setSidebar={setSidebar}
                 ></ListGroup>
               )
             );

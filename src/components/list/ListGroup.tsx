@@ -32,6 +32,7 @@ interface Props {
   onGroupDragStart: (groupId: number, parentGroup: number, event: React.DragEvent) => void;
   onGroupDragEnter: (groupId: number, parentGroup: number, event: React.DragEvent) => void;
   onGroupDragEnd: (event: React.DragEvent) => void;
+  setSidebar: (item: Item, parentGroup: number) => void;
 }
 
 function ListGroup({
@@ -59,6 +60,7 @@ function ListGroup({
   onGroupDragStart,
   onGroupDragEnter,
   onGroupDragEnd,
+  setSidebar,
 }: Props) {
   const [editMode, setEditMode] = useState(false);
 
@@ -136,6 +138,7 @@ function ListGroup({
                   onDragEnd={onItemDragEnd}
                   dragOver={group.id === dropGroup && item == dragOverItem}
                   editItemGroupPos={editItemGroupPos}
+                  setSidebar={setSidebar}
                 ></ListItem>
               );
             })}
@@ -165,6 +168,7 @@ function ListGroup({
               onGroupDragStart={onGroupDragStart}
               onGroupDragEnter={onGroupDragEnter}
               onGroupDragEnd={onGroupDragEnd}
+              setSidebar={setSidebar}
               groupDragOver={groupDropParent === subGroup.parent && dragOverGroup === subGroup.id}
             ></ListSubGroup>
           );

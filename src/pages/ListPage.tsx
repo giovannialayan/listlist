@@ -31,6 +31,8 @@ interface Props {
 function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadList, deleteList }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [scrollTarget, setScrollTarget] = useState('');
+  const [sidebarItem, setSidebarItem] = useState({} as Item);
+  const [sidebarParentGroup, setSidebarParentGroup] = useState(-1);
 
   useEffect(() => {
     const scrollElement = document.getElementById(scrollTarget);
@@ -433,6 +435,11 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
     saveMode(true);
   };
 
+  const setSidebar = (item: Item, parentGroup: number) => {
+    setSidebarItem(item);
+    setSidebarParentGroup(parentGroup);
+  };
+
   return (
     <div className='listPageContainer d-flex flex-column align-items-center gap-3'>
       <div className='d-flex flex-row align-items-center gap-4 position-fixed top-0 start-0 ps-4 pt-3'>
@@ -446,7 +453,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
           <MdDelete size={'1.75em'} />
         </a>
       </div>
-      <SideBar></SideBar>
+      {sidebarItem.id !== undefined && <SideBar item={sidebarItem} parentGroup={sidebarParentGroup}></SideBar>}
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
       <ListControls
         groups={listData.groups}
@@ -467,6 +474,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
         editGroupPos={editGroupPos}
         editGroupSettings={editGroupSettings}
         sortItems={sortItems}
+        setSidebar={setSidebar}
       ></List>
       <Modal show={showDeleteConfirm} onHide={() => setShowDeleteConfirm(false)}>
         <Modal.Body>Are you sure you want to delete {listData.title}?</Modal.Body>

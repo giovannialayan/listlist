@@ -1,13 +1,19 @@
 import './SideBar.css';
 import { MdEdit } from 'react-icons/md';
 import { Button, DropdownButton, Dropdown, DropdownItem } from 'react-bootstrap';
+import { GroupSettings, Item, Group } from '../../interfaces';
 
-function SideBar() {
+interface Props {
+  item: Item;
+  parentGroup: number;
+}
+
+function SideBar({ item, parentGroup }: Props) {
   return (
     <div className='sidebar'>
       <div className='sidebarTop'>
-        <p className='itemNumber'>20.</p>
-        <p className='itemName'>factorio</p>
+        <p className='itemNumber'>{item.groupPositions[parentGroup] + 1 + '. '}</p>
+        <p className='itemName'>{item.name}</p>
         <a
           role='button'
           onClick={() => {
@@ -19,16 +25,18 @@ function SideBar() {
         </a>
       </div>
       <div className='itemPropertiesContainer'>
-        {/* {item.properties.map((property, index) => {
+        {item.properties.map((property, index) => {
           return (
             property.data && (
-              <p key={index}>
-                {property.name}: {property.data}
-              </p>
+              <div key={index} className='itemProp'>
+                <p className='itemPropName'>{property.name}</p>
+                <p className='itemPropValue'>{property.data}</p>
+                {index === item.properties.length - 1 && <div className='itemPropLine'></div>}
+              </div>
             )
           );
-        })} */}
-        <div className='itemProp'>
+        })}
+        {/* <div className='itemProp'>
           <p className='itemPropName'>review</p>
           <p className='itemPropValue'>
             it tickled my autism, very fun. but i wish the bugs were less creepy and that it if there is going to a tower defense aspect it's more
@@ -40,8 +48,7 @@ function SideBar() {
             efficient. i never felt like i had to sit there and wait for something unless i wanted to. conveyor belt hell, 10/10.
           </p>
           <div className='itemPropLine'></div>
-          {/*if this prop is i == length-1 dont render itemPropLine*/}
-        </div>
+        </div> */}
       </div>
       <div className='d-flex flex-row justify-content-evenly gap-4'>
         <DropdownButton

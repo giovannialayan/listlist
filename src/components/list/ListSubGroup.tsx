@@ -28,6 +28,7 @@ interface Props {
   onGroupDragStart: (groupId: number, parentGroup: number, event: React.DragEvent) => void;
   onGroupDragEnter: (groupId: number, parentGroup: number, event: React.DragEvent) => void;
   onGroupDragEnd: (event: React.DragEvent) => void;
+  setSidebar: (item: Item, parentGroup: number) => void;
 }
 
 function ListSubGroup({
@@ -52,6 +53,7 @@ function ListSubGroup({
   onGroupDragStart,
   onGroupDragEnter,
   onGroupDragEnd,
+  setSidebar,
 }: Props) {
   const [editMode, setEditMode] = useState(false);
 
@@ -123,6 +125,7 @@ function ListSubGroup({
                 onDragStart={onItemDragStart}
                 onDragEnter={onItemDragEnter}
                 onDragEnd={onItemDragEnd}
+                setSidebar={setSidebar}
                 dragOver={subGroup.id === dropGroup && item == dragOverItem}
               ></ListItem>
             );
