@@ -453,7 +453,17 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
           <MdDelete size={'1.75em'} />
         </a>
       </div>
-      {sidebarItem.id !== undefined && <SideBar item={sidebarItem} parentGroup={sidebarParentGroup}></SideBar>}
+      {sidebarItem.id !== undefined && (
+        <SideBar
+          item={sidebarItem}
+          parentGroup={sidebarParentGroup}
+          allGroups={listData.groups}
+          addItemToGroup={addItemToGroup}
+          deleteItem={deleteItem}
+          editItemGroupPos={editItemGroupPos}
+          editItem={editItem}
+        ></SideBar>
+      )}
       <ListTitle editTitle={editTitle}>{listData.title}</ListTitle>
       <ListControls
         groups={listData.groups}
