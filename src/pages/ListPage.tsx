@@ -18,6 +18,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import SideBar from '../components/SideBar/SideBar';
+import NewList from '../components/NewList/NewList';
 
 interface Props {
   listData: ListData;
@@ -473,7 +474,7 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
         addProperty={addProperty}
         deleteProperties={deleteProperties}
       ></ListControls>
-      <List
+      {/* <List
         listData={listData}
         editItemGroupPos={editItemGroupPos}
         editItem={editItem}
@@ -485,7 +486,8 @@ function ListPage({ listData, setListData, saveMode, setCurrentPage, downloadLis
         editGroupSettings={editGroupSettings}
         sortItems={sortItems}
         setSidebar={setSidebar}
-      ></List>
+      ></List> */}
+      <NewList></NewList>
       <Modal show={showDeleteConfirm} onHide={() => setShowDeleteConfirm(false)}>
         <Modal.Body>Are you sure you want to delete {listData.title}?</Modal.Body>
         <Modal.Footer>

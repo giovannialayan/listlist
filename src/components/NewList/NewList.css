@@ -1,0 +1,25 @@
+.groupTop {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 1em;
+}
+
+.groupDragOver {
+  border: 1px solid gray;
+}
+
+.dragHandleLarge {
+  margin-right: 1.25em;
+}
+
+.dragOver {
+  background-color: gray !important;
+}
+
+.numberInput {
+  width: 2rem;
+  text-align: end;
+}
