@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MdDragHandle } from 'react-icons/md';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import './NewList.css';
 
 interface Props {}
 
@@ -152,7 +153,7 @@ function NewList({}: Props) {
     <ul className='list-group list-group-flush'>
       {list.map((item) => {
         return (
-          <li key={item.id} className={'list-group-item d-flex flex-column gap-2' + (dragOver ? ' dragOver' : '')}>
+          <li key={item.id} className={'listGroupItem d-flex flex-column gap-2' + (dragOver ? ' dragOver' : '')}>
             <div className='d-flex flex-row justify-content-between align-items-center gap-3'>
               <div className='d-flex flex-row gap-2'>
                 <div role='button' draggable>
@@ -160,7 +161,7 @@ function NewList({}: Props) {
                 </div>
                 {item.groupPosition !== undefined && <p className='mb-0'>{item.groupPosition + 1 + '. '}</p>}
               </div>
-              <p className='mb-0'>{item.name}</p>
+              <p className={'mb-0 ' + (item.parent === undefined ? '' : item.parent === -1 ? 'fs-3 fw-bold' : 'fs-5 fw-bold')}>{item.name}</p>
               <a
                 role='button'
                 onClick={() => {
