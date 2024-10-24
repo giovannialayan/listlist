@@ -2,8 +2,6 @@ namespace ListList.Api.Entities;
 
 public class ListGroup
 {
-    public int Id { get; set; }
-
     public required string Name { get; set; }
 
     public List<int> SubGroups { get; set; } = [];

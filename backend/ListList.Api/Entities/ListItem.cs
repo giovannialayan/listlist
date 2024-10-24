@@ -1,9 +1,7 @@
 namespace ListList.Api.Entities;
 
-public class ListListItem
+public class ListItem
 {
-    public int Id { get; set; }
-
     public required string Name { get; set; }
 
     public List<int> Groups { get; set; } = [];
