@@ -5,7 +5,7 @@ namespace ListList.Api.Mapping;
 
 public static class ListItemMapping
 {
-    public static ListItem ToEntity(this UpdateListItemDto listItem, int id)
+    public static ListItem ToEntity(this UpdateListItemDto listItem)
     {
         return new ListItem()
         {
