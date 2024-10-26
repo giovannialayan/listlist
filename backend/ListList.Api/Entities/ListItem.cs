@@ -1,5 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
 namespace ListList.Api.Entities;
 
+[NotMapped]
+[Keyless]
 public class ListItem
 {
     public required string Name { get; set; }
@@ -8,5 +13,5 @@ public class ListItem
 
     public List<int> GroupPositions { get; set; } = [];
 
-    public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
+    public ISet<ListItemProperty> Properties { get; set; } = new HashSet<ListItemProperty>();
 }
