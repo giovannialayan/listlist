@@ -1,10 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
 namespace ListList.Api.Entities;
 
-[NotMapped]
-[Keyless]
 public class ListGroup
 {
     public required string Name { get; set; }

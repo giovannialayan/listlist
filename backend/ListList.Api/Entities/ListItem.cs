@@ -1,17 +1,12 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
 namespace ListList.Api.Entities;
 
-[NotMapped]
-[Keyless]
 public class ListItem
 {
     public required string Name { get; set; }
 
     public List<int> Groups { get; set; } = [];
 
-    public List<int> GroupPositions { get; set; } = [];
+    public Dictionary<string, int> GroupPositions { get; set; } = new Dictionary<string, int>();
 
-    public ISet<ListItemProperty> Properties { get; set; } = new HashSet<ListItemProperty>();
+    public List<ListItemProperty> Properties { get; set; } = [];
 }

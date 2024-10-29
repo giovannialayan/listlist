@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using ListList.Api.Entities;
 
 namespace ListList.Api.Dtos;
 
 public record class CreateListItemDto(
     [Required] string Name,
     List<int> Groups,
-    List<int> GroupPositions,
-    Dictionary<string, string> Properties
+    Dictionary<string, int> GroupPositions,
+    List<ListItemProperty> Properties
 );
