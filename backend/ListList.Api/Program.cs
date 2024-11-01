@@ -11,7 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connString = builder.Configuration["MONGODB_URI"];
 var client = new MongoClient(connString);
-var collection = client.GetDatabase("listlist").GetCollection<ListListEntity>("lists");
+builder.Services.AddSingleton<IMongoClient>(client);
+builder.Services.AddScoped(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase("listlist");
+});
+// var collection = client.GetDatabase("listlist").GetCollection<ListListEntity>("lists");
 
 // var filter = Builders<ListListEntity>.Filter.Eq(list => list.Title, "anime list");
 // var update = Builders<ListListEntity>.Update.Push(list => list.Items,
@@ -26,14 +32,12 @@ var collection = client.GetDatabase("listlist").GetCollection<ListListEntity>("l
 
 // collection.UpdateOne(filter, update);
 
-var filter = Builders<ListListEntity>.Filter.Eq(list => list.Title, "anime list");
-var list = await collection.Find(filter).FirstOrDefaultAsync();
+// var filter = Builders<ListListEntity>.Filter.Eq(list => list.Title, "anime list");
+// var list = await collection.Find(filter).FirstOrDefaultAsync();
 
 var app = builder.Build();
 
-// app.MapListEndpoints();
-
-app.MapGet("/", () => list.ToListListDto());
+app.MapListEndpoints();
 
 
 app.Run();
