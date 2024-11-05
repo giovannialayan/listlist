@@ -1,9 +1,10 @@
 using ListList.Api.Entities;
+using MongoDB.Bson;
 
 namespace ListList.Api.Dtos;
 
 public record class ListListDto(
-    uint Id,
+    ObjectId Id,
     string Title,
     List<ListItem> Items,
     List<ListGroup> Groups,

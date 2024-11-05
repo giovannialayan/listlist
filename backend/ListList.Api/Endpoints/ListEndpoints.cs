@@ -3,6 +3,7 @@ using ListList.Api.Dtos;
 using ListList.Api.Entities;
 using ListList.Api.Mapping;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace ListList.Api.Endpoints;
@@ -32,16 +33,25 @@ public static class ListEndpoints
         });
 
         //get list by id
-        group.MapGet("/{id}", async (uint id, IMongoDatabase database) =>
+        group.MapGet("/{id}", async (string id, IMongoDatabase database) =>
         {
             var collection = database.GetCollection<ListListEntity>("lists");
 
             if (collection is null)
             {
-                return Results.NotFound("collection not found");
+                return Results.Problem();
             }
 
-            ListListEntity? list = await collection.Find(doc => doc.Id == id).FirstOrDefaultAsync();
+            ObjectId objId;
+
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest();
+            }
+
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+
+            ListListEntity? list = await collection.Find(filter).FirstOrDefaultAsync();
 
             if (list is null)
             // if(list is null || !list.IsPublic) //todo: later when user is implemented use this
@@ -53,16 +63,42 @@ public static class ListEndpoints
         })
         .WithName(GetListEndpointName);
 
-        // //create new list
-        // //(int creatorId, ListListContext dbContext) //todo: for user version
-        // group.MapPost("/", async (ListListContext dbContext) =>
+        //create new list
+        //(int creatorId, ListListContext dbContext) //todo: for user version
+        group.MapPost("/", async (IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
+
+            if (collection is null)
+            {
+                return Results.NotFound("collection not found");
+            }
+
+            ListListEntity newList = new ListListEntity();
+
+            //newList.owner = creatorId; //todo: for user version
+
+            await collection.InsertOneAsync(newList);
+
+            return Results.CreatedAtRoute(GetListEndpointName, new { id = newList.Id }, newList.ToListListDto());
+        });
+
+        //create new list from existing list
+        //(int creatorId, ListListContext dbContext) //todo: for user version
+        // group.MapPost("/{list}", async (ListListDto list, IMongoDatabase database) =>
         // {
-        //     ListListEntity newList = new ListListEntity();
+        //     var collection = database.GetCollection<ListListEntity>("lists");
+
+        //     if (collection is null)
+        //     {
+        //         return Results.NotFound("collection not found");
+        //     }
+
+        //     ListListEntity newList = list.ToEntity();
 
         //     //newList.owner = creatorId; //todo: for user version
 
-        //     dbContext.Lists.Add(newList);
-        //     await dbContext.SaveChangesAsync();
+        //     await collection.InsertOneAsync(newList);
 
         //     return Results.CreatedAtRoute(GetListEndpointName, new { id = newList.Id }, newList.ToListListDto());
         // });

@@ -1,8 +1,10 @@
+using MongoDB.Bson;
+
 namespace ListList.Api.Entities;
 
 public class ListListEntity
 {
-    public uint Id { get; set; }
+    public ObjectId Id { get; set; }
 
     public string Title { get; set; } = "new list";
 
