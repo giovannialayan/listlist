@@ -59,19 +59,19 @@ public static class ListEndpoints
                 return Results.NotFound("list not found");
             }
 
-            return Results.Ok(list.ToListListDto());
+            return Results.Ok(list.ToDto());
         })
         .WithName(GetListEndpointName);
 
         //create new list
         //(int creatorId, ListListContext dbContext) //todo: for user version
-        group.MapPost("/", async (IMongoDatabase database) =>
+        group.MapPost("/newlist", async (IMongoDatabase database) =>
         {
             var collection = database.GetCollection<ListListEntity>("lists");
 
             if (collection is null)
             {
-                return Results.NotFound("collection not found");
+                return Results.Problem();
             }
 
             ListListEntity newList = new ListListEntity();
@@ -80,85 +80,121 @@ public static class ListEndpoints
 
             await collection.InsertOneAsync(newList);
 
-            return Results.CreatedAtRoute(GetListEndpointName, new { id = newList.Id }, newList.ToListListDto());
+            return Results.CreatedAtRoute(GetListEndpointName, new { id = newList.Id }, newList.ToDto());
         });
 
         //create new list from existing list
         //(int creatorId, ListListContext dbContext) //todo: for user version
-        // group.MapPost("/{list}", async (ListListDto list, IMongoDatabase database) =>
-        // {
-        //     var collection = database.GetCollection<ListListEntity>("lists");
+        group.MapPost("/fromlist", async (ListListDto list, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
 
-        //     if (collection is null)
-        //     {
-        //         return Results.NotFound("collection not found");
-        //     }
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
 
-        //     ListListEntity newList = list.ToEntity();
+            ListListEntity newList = list.ToEntity();
 
-        //     //newList.owner = creatorId; //todo: for user version
+            //newList.owner = creatorId; //todo: for user version
 
-        //     await collection.InsertOneAsync(newList);
+            await collection.InsertOneAsync(newList);
 
-        //     return Results.CreatedAtRoute(GetListEndpointName, new { id = newList.Id }, newList.ToListListDto());
-        // });
+            return Results.CreatedAtRoute(GetListEndpointName, new { id = newList.Id }, newList.ToDto());
+        });
 
-        // //create new list item in list by id
-        // group.MapPost("/{id}/item", async (int id, CreateListItemDto createdItem, ListListContext dbContext) =>
-        // {
-        //     ListListEntity? list = await dbContext.Lists.FindAsync(id);
+        //create new list item in list by id
+        group.MapPost("/{id}/item", async (string id, CreateListItemDto createdItem, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
 
-        //     if (list is null)
-        //     {
-        //         return Results.NotFound();
-        //     }
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
 
-        //     //todo: validate that all of the data makes sense, like if the item has a group id that doesnt exist
-        //     //todo: update group size
+            ObjectId objId;
 
-        //     ListItem newlistItem = createdItem.ToEntity();
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest();
+            }
 
-        //     dbContext.Entry(list).Property<List<ListItem>>("Items").CurrentValue.Add(newlistItem);
-        //     await dbContext.SaveChangesAsync();
+            //todo: validate that all of the data makes sense, like if the item has a group id that doesnt exist
+            //todo: update group size
 
-        //     return Results.Ok(); //todo: send back updated list or actually this is technically closer to an update so maybe just return ok is fine
-        // });
+            ListItem newlistItem = createdItem.ToEntity();
 
-        // //create new group in list by id
-        // group.MapPost("/{id}/group", async (int id, CreateListGroupDto createdGroup, ListListContext dbContext) =>
-        // {
-        //     ListListEntity? list = await dbContext.Lists.FindAsync(id);
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+            var update = Builders<ListListEntity>.Update.Push(list => list.Items, newlistItem);
 
-        //     if (list is null)
-        //     {
-        //         return Results.NotFound();
-        //     }
+            await collection.UpdateOneAsync(filter, update);
 
-        //     //todo: validate data, make sure parent exists or is -1
+            return Results.Ok(); //todo: send back updated list or actually this is technically closer to an update so maybe just return ok is fine
+        });
 
-        //     ListGroup newListGroup = createdGroup.ToEntity();
+        //create new group in list by id
+        group.MapPost("/{id}/group", async (string id, CreateListGroupDto createdGroup, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
 
-        //     dbContext.Entry(list).Property<List<ListGroup>>("Groups").CurrentValue.Add(newListGroup);
-        //     await dbContext.SaveChangesAsync();
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
 
-        //     return Results.Ok(); //todo: send back updated list or actually this is technically closer to an update so maybe just return ok is fine
-        // });
+            ObjectId objId;
 
-        // //update list by id
-        // group.MapPut("/{id}", async (int id, UpdateListDto updatedList, ListListContext dbContext) =>
-        // {
-        //     ListListEntity? list = await dbContext.Lists.FindAsync(id);
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest();
+            }
 
-        //     if (list is null)
-        //     {
-        //         return Results.NotFound();
-        //     }
+            //todo: validate data, make sure parent exists or is -1
 
-        //     dbContext.Entry(list).CurrentValues.SetValues(updatedList);
-        //     await dbContext.SaveChangesAsync();
+            ListGroup newListGroup = createdGroup.ToEntity();
 
-        //     return Results.NoContent();
-        // });
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+            var update = Builders<ListListEntity>.Update.Push(list => list.Groups, newListGroup);
+
+            await collection.UpdateOneAsync(filter, update);
+
+            return Results.Ok(); //todo: send back updated list or actually this is technically closer to an update so maybe just return ok is fine
+        });
+
+        //update list by id
+        group.MapPut("/{id}", async (string id, UpdateListDto updatedList, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
+
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
+
+            ObjectId objId;
+
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest();
+            }
+
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+
+            ListListEntity? listToUpdate = await collection.Find(filter).FirstOrDefaultAsync();
+
+            if (listToUpdate is null)
+            // if(list is null || !list.IsPublic) //todo: later when user is implemented use this
+            {
+                return Results.NotFound("list not found");
+            }
+
+            var update = Builders<ListListEntity>.Update.Set(list => list, updatedList.ToEntity(listToUpdate));
+
+            await collection.UpdateOneAsync(filter, update);
+
+            return Results.NoContent();
+        });
 
         // //update list item in list by list id and item id
         // group.MapPut("/{id}/item/{iid}", async (int id, int iid, UpdateListItemDto updatedItem, ListListContext dbContext) =>
