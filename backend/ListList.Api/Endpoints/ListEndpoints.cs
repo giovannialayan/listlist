@@ -150,7 +150,7 @@ public static class ListEndpoints
                 return Results.BadRequest();
             }
 
-            //todo: validate data, make sure parent exists or is -1
+            //todo: validate data, make sure every entry is there
 
             ListGroup newListGroup = createdGroup.ToEntity();
 
@@ -181,41 +181,57 @@ public static class ListEndpoints
 
             var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
 
-            ListListEntity? listToUpdate = await collection.Find(filter).FirstOrDefaultAsync();
+            bool listExists = await collection.Find(filter).AnyAsync();
 
-            if (listToUpdate is null)
-            // if(list is null || !list.IsPublic) //todo: later when user is implemented use this
+            if (!listExists)
             {
                 return Results.NotFound("list not found");
             }
 
-            var update = Builders<ListListEntity>.Update.Set(list => list, updatedList.ToEntity(listToUpdate));
+            var update = Builders<ListListEntity>.Update.Set(list => list.Title, updatedList.Title).Set(list => list.Properties, updatedList.Properties);
 
             await collection.UpdateOneAsync(filter, update);
 
             return Results.NoContent();
         });
 
-        // //update list item in list by list id and item id
-        // group.MapPut("/{id}/item/{iid}", async (int id, int iid, UpdateListItemDto updatedItem, ListListContext dbContext) =>
-        // {
-        //     ListListEntity? list = await dbContext.Lists.FindAsync(id);
+        //update list item in list by list id and item id
+        group.MapPut("/{id}/item/{iid}", async (string id, int iid, UpdateListItemDto updatedItem, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
 
-        //     if (list is null)
-        //     {
-        //         return Results.NotFound("list not found");
-        //     }
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
 
-        //     if (iid < 0 || iid >= dbContext.Entry(list).Property<List<ListItem>>("Items").CurrentValue.Count)
-        //     {
-        //         return Results.NotFound("list item not found");
-        //     }
+            ObjectId objId;
 
-        //     dbContext.Entry(list).Property<List<ListItem>>("Items").CurrentValue[iid] = updatedItem.ToEntity();
-        //     await dbContext.SaveChangesAsync();
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest();
+            }
 
-        //     return Results.NoContent();
-        // });
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+
+            ListListEntity? list = await collection.Find(filter).FirstOrDefaultAsync();
+
+            if (list is null)
+            {
+                return Results.NotFound("list not found");
+            }
+
+            if (iid < 0 || iid >= list.Items.Count)
+            {
+                return Results.NotFound("item not found");
+            }
+
+            var update = Builders<ListListEntity>.Update.Set(list => list.Items[iid], updatedItem.ToEntity());
+
+            await collection.UpdateOneAsync(filter, update);
+
+            return Results.NoContent();
+        });
 
         // //update group in list by list id and group id
         // group.MapPut("/{id}/group/{gid}", async (int id, int gid, UpdateListGroupDto updatedGroup, ListListContext dbContext) =>

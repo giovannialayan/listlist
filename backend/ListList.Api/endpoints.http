@@ -3,3 +3,74 @@ GET http://localhost:5243/list/
 ###
 
 GET http://localhost:5243/list/672116ad95d243fc7178933f
+
+###
+
+POST http://localhost:5243/list/newlist
+
+###
+
+POST http://localhost:5243/list/fromlist
+Content-Type: application/json
+
+{
+
+}
+
+###
+
+POST http://localhost:5243/list/672116ad95d243fc7178933f/item
+Content-Type: application/json
+
+{
+    "name": "86",
+    "groups": [0, 2, 12, 16, 21],
+    "groupPositions": { "0": 2, "2": 40, "12": 1, "16": 0, "21": 0 },
+    "properties": [
+        { "name": "last watched", "data": "2/8/2023" },
+        { "name": "japanese title", "data": "86―エイティシックス―" },
+        { "name": "english title", "data": "" },
+        { "name": "notes", "data": "" }
+    ]
+}
+
+###
+
+POST http://localhost:5243/list/672116ad95d243fc7178933f/group
+Content-Type: application/json
+
+{
+    "name": "alphabetically",
+    "subGroups": [],
+    "size": 31,
+    "parent": -1,
+    "position": 0,
+    "settings": { "numbered": false, "autoSort": true, "sortByProperty": "", "sortAscending": true, "collapse": true }
+}
+
+###
+
+PUT http://localhost:5243/list/672116ad95d243fc7178933f
+Content-Type: application/json
+
+{
+    "title": "anime list2",
+    "properties": ["last watched", "japanese title", "english title", "notes"]
+}
+
+###
+
+PUT http://localhost:5243/list/672116ad95d243fc7178933f/item/2
+Content-Type: application/json
+
+{
+    "name": "86 b",
+    "groups": [0, 2, 12, 16, 21],
+    "groupPositions": { "0": 2, "2": 40, "12": 1, "16": 0, "21": 0 },
+    "properties": [
+        { "name": "last watched", "data": "2/8/2023" },
+        { "name": "japanese title", "data": "86―エイティシックス―" },
+        { "name": "english title", "data": "" },
+        { "name": "notes", "data": "" }
+    ]
+}
