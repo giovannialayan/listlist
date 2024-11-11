@@ -46,7 +46,7 @@ public static class ListEndpoints
 
             if (!ObjectId.TryParse(id, out objId))
             {
-                return Results.BadRequest();
+                return Results.BadRequest("invalid list id");
             }
 
             var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
@@ -117,7 +117,7 @@ public static class ListEndpoints
 
             if (!ObjectId.TryParse(id, out objId))
             {
-                return Results.BadRequest();
+                return Results.BadRequest("invalid list id");
             }
 
             //todo: validate that all of the data makes sense, like if the item has a group id that doesnt exist
@@ -147,7 +147,7 @@ public static class ListEndpoints
 
             if (!ObjectId.TryParse(id, out objId))
             {
-                return Results.BadRequest();
+                return Results.BadRequest("invalid list id");
             }
 
             //todo: validate data, make sure every entry is there
@@ -176,7 +176,7 @@ public static class ListEndpoints
 
             if (!ObjectId.TryParse(id, out objId))
             {
-                return Results.BadRequest();
+                return Results.BadRequest("invalid list id");
             }
 
             var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
@@ -209,7 +209,7 @@ public static class ListEndpoints
 
             if (!ObjectId.TryParse(id, out objId))
             {
-                return Results.BadRequest();
+                return Results.BadRequest("invalid list id");
             }
 
             var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
@@ -233,76 +233,158 @@ public static class ListEndpoints
             return Results.NoContent();
         });
 
-        // //update group in list by list id and group id
-        // group.MapPut("/{id}/group/{gid}", async (int id, int gid, UpdateListGroupDto updatedGroup, ListListContext dbContext) =>
-        // {
-        //     ListListEntity? list = await dbContext.Lists.FindAsync(id);
+        //update group in list by list id and group id
+        group.MapPut("/{id}/group/{gid}", async (string id, int gid, UpdateListGroupDto updatedGroup, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
 
-        //     if (list is null)
-        //     {
-        //         return Results.NotFound("list not found");
-        //     }
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
 
-        //     if (gid < 0 || gid >= dbContext.Entry(list).Property<List<ListGroup>>("Groups").CurrentValue.Count)
-        //     {
-        //         return Results.NotFound("group not found");
-        //     }
+            ObjectId objId;
 
-        //     dbContext.Entry(list).Property<List<ListGroup>>("Groups").CurrentValue[gid] = updatedGroup.ToEntity();
-        //     await dbContext.SaveChangesAsync();
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest("invalid list id");
+            }
 
-        //     return Results.NoContent();
-        // });
+            //if updatedGroup Name is null, Position is null, Settings.Numbered is null, etc
 
-        // //delete list by id
-        // group.MapDelete("/{id}", async (int id, ListListContext dbContext) =>
-        // {
-        //     await dbContext.Lists.Where(list => list.Id == id).ExecuteDeleteAsync();
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
 
-        //     return Results.NoContent();
-        // });
+            ListListEntity? list = await collection.Find(filter).FirstOrDefaultAsync();
 
-        // //delete list item by list id and item id
-        // group.MapDelete("/{id}/item/{iid}", async (int id, int iid, ListListContext dbContext) =>
-        // {
-        //     ListListEntity? list = await dbContext.Lists.FindAsync(id);
+            if (list is null)
+            {
+                return Results.NotFound("list not found");
+            }
 
-        //     if (list is null)
-        //     {
-        //         return Results.NotFound("list not found");
-        //     }
+            if (gid < 0 || gid >= list.Groups.Count)
+            {
+                return Results.NotFound("group not found");
+            }
 
-        //     if (iid < 0 || iid >= dbContext.Entry(list).Property<List<ListItem>>("Items").CurrentValue.Count)
-        //     {
-        //         return Results.NotFound("list item not found");
-        //     }
+            var update = Builders<ListListEntity>.Update.Set(list => list.Groups[gid], updatedGroup.ToEntity());
 
-        //     dbContext.Entry(list).Property<List<ListItem>>("Items").CurrentValue.RemoveAt(iid);
-        //     await dbContext.SaveChangesAsync();
+            await collection.UpdateOneAsync(filter, update);
 
-        //     return Results.NoContent();
-        // });
+            return Results.NoContent();
+        });
 
-        // //delete group by list id and item id
-        // group.MapDelete("/{id}/group/{gid}", async (int id, int gid, ListListContext dbContext) =>
-        // {
-        //     ListListEntity? list = await dbContext.Lists.FindAsync(id);
+        //delete list by id
+        group.MapDelete("/{id}", async (string id, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
 
-        //     if (list is null)
-        //     {
-        //         return Results.NotFound("list not found");
-        //     }
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
 
-        //     if (gid < 0 || gid >= dbContext.Entry(list).Property<List<ListGroup>>("Groups").CurrentValue.Count)
-        //     {
-        //         return Results.NotFound("group not found");
-        //     }
+            ObjectId objId;
 
-        //     dbContext.Entry(list).Property<List<ListGroup>>("Groups").CurrentValue.RemoveAt(gid);
-        //     await dbContext.SaveChangesAsync();
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest("invalid list id");
+            }
 
-        //     return Results.NoContent();
-        // });
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+
+            await collection.DeleteOneAsync(filter);
+
+            return Results.NoContent();
+        });
+
+        //delete list item by list id and item id
+        group.MapDelete("/{id}/item/{iid}", async (string id, int iid, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
+
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
+
+            ObjectId objId;
+
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest("invalid list id");
+            }
+
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+
+            ListListEntity? list = await collection.Find(filter).FirstOrDefaultAsync();
+
+            if (list is null)
+            {
+                return Results.NotFound("list not found");
+            }
+
+            if (iid < 0 || iid >= list.Items.Count)
+            {
+                return Results.NotFound("item not found");
+            }
+
+            //todo: update size of all groups that this item is in
+            //todo: update group positions for all items in a group with this item
+
+            list.Items.RemoveAt(iid);
+
+            var update = Builders<ListListEntity>.Update.Set(list => list.Items, list.Items);
+
+            await collection.UpdateOneAsync(filter, update);
+
+            return Results.NoContent();
+        });
+
+        //delete group by list id and item id
+        group.MapDelete("/{id}/group/{gid}", async (string id, int gid, IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<ListListEntity>("lists");
+
+            if (collection is null)
+            {
+                return Results.Problem();
+            }
+
+            ObjectId objId;
+
+            if (!ObjectId.TryParse(id, out objId))
+            {
+                return Results.BadRequest("invalid list id");
+            }
+
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+
+            ListListEntity? list = await collection.Find(filter).FirstOrDefaultAsync();
+
+            if (list is null)
+            {
+                return Results.NotFound("list not found");
+            }
+
+            if (gid < 0 || gid >= list.Groups.Count)
+            {
+                return Results.NotFound("item not found");
+            }
+
+            //todo: remove child groups
+            //todo: remove items in group that are only in this group
+            //todo: remove group from parent's subgroups
+            //todo: remove group from items that are in this group and other group(s)
+            //todo: change group to give it an id and make it an ObjectId so i dont have to update every group index reference after deleting a group
+
+            list.Groups.RemoveAt(gid);
+
+            var update = Builders<ListListEntity>.Update.Set(list => list.Groups, list.Groups);
+
+            await collection.UpdateOneAsync(filter, update);
+
+            return Results.NoContent();
+        });
 
         return group;
     }

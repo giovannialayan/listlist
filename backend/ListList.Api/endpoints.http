@@ -14,7 +14,138 @@ POST http://localhost:5243/list/fromlist
 Content-Type: application/json
 
 {
-
+  "id": {
+    "timestamp": 0,
+    "creationTime": "1970-01-01T00:00:00Z"
+  },
+  "title": "anime list",
+  "items": [
+    {
+      "name": "100-man no inochi no ue ni ore wa tatteiru",
+      "groups": [
+        0,
+        3,
+        12,
+        20
+      ],
+      "groupPositions": {
+        "0": 0,
+        "3": 34,
+        "12": 0,
+        "20": 0
+      },
+      "properties": [
+        {
+          "name": "last watched",
+          "data": ""
+        },
+        {
+          "name": "japanese title",
+          "data": "100万の命の上に俺は立っている"
+        },
+        {
+          "name": "english title",
+          "data": "i'm standing on 1,000,000 lives"
+        },
+        {
+          "name": "notes",
+          "data": ""
+        }
+      ]
+    },
+    {
+      "name": "5-toubun no hanayome",
+      "groups": [
+        0,
+        2,
+        13,
+        15,
+        20
+      ],
+      "groupPositions": {
+        "0": 1,
+        "2": 97,
+        "13": 0,
+        "15": 0,
+        "20": 1
+      },
+      "properties": [
+        {
+          "name": "last watched",
+          "data": "11/28/2023"
+        },
+        {
+          "name": "japanese title",
+          "data": "五等分の花嫁"
+        },
+        {
+          "name": "english title",
+          "data": "the quintessential quintuplets"
+        },
+        {
+          "name": "notes",
+          "data": ""
+        }
+      ]
+    },
+    {
+      "name": "86",
+      "groups": [
+        0,
+        2,
+        12,
+        16,
+        21
+      ],
+      "groupPositions": {
+        "0": 2,
+        "2": 40,
+        "12": 1,
+        "16": 0,
+        "21": 0
+      },
+      "properties": [
+        {
+          "name": "last watched",
+          "data": "2/8/2023"
+        },
+        {
+          "name": "japanese title",
+          "data": "86―エイティシックス―"
+        },
+        {
+          "name": "english title",
+          "data": ""
+        },
+        {
+          "name": "notes",
+          "data": ""
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "name": "alphabetically",
+      "subGroups": [],
+      "size": 0,
+      "parent": -1,
+      "position": 0,
+      "settings": {
+        "numbered": false,
+        "autoSort": true,
+        "sortByProperty": "",
+        "sortAscending": true,
+        "collapse": true
+      }
+    }
+  ],
+  "properties": [
+    "last watched",
+    "japanese title",
+    "english title",
+    "notes"
+  ]
 }
 
 ###
@@ -74,3 +205,22 @@ Content-Type: application/json
         { "name": "notes", "data": "" }
     ]
 }
+
+###
+
+PUT http://localhost:5243/list/672116ad95d243fc7178933f/group/0
+Content-Type: application/json
+
+{
+    "name": "alphabetically2",
+    "position": 0,
+    "settings": { "numbered": false, "autoSort": true, "sortByProperty": "", "sortAscending": true, "collapse": true }
+}
+
+###
+
+DELETE http://localhost:5243/list/672116ad95d243fc7178933f/item/2
+
+###
+
+DELETE http://localhost:5243/list/672116ad95d243fc7178933f/group/1
