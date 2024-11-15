@@ -10,7 +10,7 @@ public class ListListEntity
 
     public List<ListItem> Items { get; set; } = new List<ListItem>();
 
-    public List<ListGroup> Groups { get; set; } = new List<ListGroup>();
+    public Dictionary<ObjectId, ListGroup> Groups { get; set; } = new Dictionary<ObjectId, ListGroup>();
 
     public List<string> Properties { get; set; } = new List<string>();
 }

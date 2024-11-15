@@ -20,6 +20,7 @@ public static class ListGroupMapping
     {
         return new ListGroup()
         {
+            Id = listGroup.Id,
             Name = listGroup.Name,
             Position = listGroup.Position,
             Settings = listGroup.Settings

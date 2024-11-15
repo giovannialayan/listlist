@@ -1,7 +1,11 @@
+using MongoDB.Bson;
+
 namespace ListList.Api.Entities;
 
 public class ListGroup
 {
+    public ObjectId Id { get; set; }
+
     public required string Name { get; set; }
 
     public List<int> SubGroups { get; set; } = [];

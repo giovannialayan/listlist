@@ -4,7 +4,7 @@ public class ListItem
 {
     public required string Name { get; set; }
 
-    public List<int> Groups { get; set; } = [];
+    public List<string> Groups { get; set; } = [];
 
     public Dictionary<string, int> GroupPositions { get; set; } = new Dictionary<string, int>();
 
