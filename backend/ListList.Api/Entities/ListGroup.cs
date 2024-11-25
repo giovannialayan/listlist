@@ -8,11 +8,11 @@ public class ListGroup
 
     public required string Name { get; set; }
 
-    public List<int> SubGroups { get; set; } = [];
+    public List<string> SubGroups { get; set; } = [];
 
     public int Size { get; set; } = 0;
 
-    public int Parent { get; set; } = -1;
+    public string Parent { get; set; } = "";
 
     public int Position { get; set; }
 

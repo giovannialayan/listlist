@@ -4,7 +4,7 @@ namespace ListList.Api.Dtos;
 
 public record class CreateListGroupDto(
     string Name,
-    int Parent,
+    string Parent,
     int Position,
     ListGroupSettings Settings
 );

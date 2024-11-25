@@ -5,7 +5,7 @@ namespace ListList.Api.Dtos;
 
 public record class UpdateListItemDto(
     [Required] string Name,
-    List<int> Groups,
+    List<string> Groups,
     Dictionary<string, int> GroupPositions,
     List<ListItemProperty> Properties
 );

@@ -75,12 +75,13 @@ public static class ListEndpoints
             }
 
             ListListEntity newList = new ListListEntity();
+            newList._id = ObjectId.GenerateNewId();
 
             //newList.owner = creatorId; //todo: for user version
 
             await collection.InsertOneAsync(newList);
 
-            return Results.CreatedAtRoute(GetListEndpointName, new { id = newList.Id }, newList.ToDto());
+            return Results.CreatedAtRoute(GetListEndpointName, new { id = newList._id }, newList.ToDto());
         });
 
         //create new list from existing list
@@ -95,12 +96,15 @@ public static class ListEndpoints
             }
 
             ListListEntity newList = list.ToEntity();
+            newList._id = ObjectId.GenerateNewId();
+
+            //todo: regenerate all group ids, idk if this is necessary but i feel like it would make more sense and possibly weed out potential bugs
 
             //newList.owner = creatorId; //todo: for user version
 
             await collection.InsertOneAsync(newList);
 
-            return Results.CreatedAtRoute(GetListEndpointName, new { id = newList.Id }, newList.ToDto());
+            return Results.CreatedAtRoute(GetListEndpointName, new { id = newList._id }, newList.ToDto());
         });
 
         //create new list item in list by id
@@ -153,6 +157,7 @@ public static class ListEndpoints
             //todo: validate data, make sure every entry is there
 
             ListGroup newListGroup = createdGroup.ToEntity();
+            newListGroup.Id = ObjectId.GenerateNewId();
 
             var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
 
@@ -165,7 +170,7 @@ public static class ListEndpoints
 
             ObjectId newGroupId = ObjectId.GenerateNewId();
             newListGroup.Id = newGroupId;
-            existingList.Groups.Add(newGroupId, newListGroup);
+            existingList.Groups.Add(newGroupId.ToString(), newListGroup);
 
             var update = Builders<ListListEntity>.Update.Set(list => list.Groups, existingList.Groups);
 
@@ -280,12 +285,12 @@ public static class ListEndpoints
                 return Results.NotFound("list not found");
             }
 
-            if (!list.Groups.ContainsKey(groupObjId))
+            if (!list.Groups.ContainsKey(gid))
             {
                 return Results.NotFound("group not found");
             }
 
-            var update = Builders<ListListEntity>.Update.Set(list => list.Groups[groupObjId], updatedGroup.ToEntity());
+            var update = Builders<ListListEntity>.Update.Set(list => list.Groups[gid], updatedGroup.ToEntity());
 
             await collection.UpdateOneAsync(filter, update);
 
@@ -392,7 +397,7 @@ public static class ListEndpoints
                 return Results.NotFound("list not found");
             }
 
-            if (!list.Groups.ContainsKey(groupObjId))
+            if (!list.Groups.ContainsKey(gid))
             {
                 return Results.NotFound("group not found");
             }
@@ -402,7 +407,7 @@ public static class ListEndpoints
             //todo: remove group from parent's subgroups
             //todo: remove group from items that are in this group and other group(s)
 
-            list.Groups.Remove(groupObjId);
+            list.Groups.Remove(gid);
             var update = Builders<ListListEntity>.Update.Set(list => list.Groups, list.Groups);
 
             await collection.UpdateOneAsync(filter, update);

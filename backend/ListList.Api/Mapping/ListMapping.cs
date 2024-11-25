@@ -9,7 +9,7 @@ public static class ListMapping
     public static ListListDto ToDto(this ListListEntity list)
     {
         return new ListListDto(
-            list.Id,
+            list._id,
             list.Title,
             list.Items,
             list.Groups,
@@ -21,7 +21,7 @@ public static class ListMapping
     {
         return new ListListEntity()
         {
-            Id = listDto.Id,
+            _id = listDto.Id,
             Title = listDto.Title,
             Items = listDto.Items,
             Groups = listDto.Groups,
@@ -33,7 +33,7 @@ public static class ListMapping
     {
         return new ListListEntity()
         {
-            Id = listEntity.Id,
+            _id = listEntity._id,
             Title = listDto.Title,
             Items = listEntity.Items,
             Groups = listEntity.Groups,

@@ -7,6 +7,6 @@ public record class ListListDto(
     ObjectId Id,
     string Title,
     List<ListItem> Items,
-    Dictionary<ObjectId, ListGroup> Groups,
+    Dictionary<string, ListGroup> Groups,
     List<string> Properties
 );

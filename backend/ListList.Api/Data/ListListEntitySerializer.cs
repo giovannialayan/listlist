@@ -9,7 +9,7 @@ public static class ListListEntitySerializer
     {
         BsonClassMap.RegisterClassMap<ListListEntity>(classMap =>
         {
-            classMap.MapMember(list => list.Id);
+            classMap.MapMember(list => list._id);
             classMap.MapMember(list => list.Title);
             classMap.MapMember(list => list.Items);
             classMap.MapMember(list => list.Groups);
