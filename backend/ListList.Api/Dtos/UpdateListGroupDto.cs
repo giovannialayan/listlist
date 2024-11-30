@@ -4,7 +4,7 @@ using MongoDB.Bson;
 namespace ListList.Api.Dtos;
 
 public record class UpdateListGroupDto(
-    ObjectId Id,
+    Guid Id,
     string Name,
     int Position,
     ListGroupSettings Settings

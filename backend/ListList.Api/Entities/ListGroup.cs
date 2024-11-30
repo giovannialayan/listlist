@@ -1,10 +1,12 @@
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ListList.Api.Entities;
 
 public class ListGroup
 {
-    public ObjectId Id { get; set; }
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
+    public Guid Id { get; set; }
 
     public required string Name { get; set; }
 

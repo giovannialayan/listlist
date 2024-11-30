@@ -98,7 +98,17 @@ public static class ListEndpoints
             ListListEntity newList = list.ToEntity();
             newList._id = ObjectId.GenerateNewId();
 
-            //todo: regenerate all group ids, idk if this is necessary but i feel like it would make more sense and possibly weed out potential bugs
+            //regenerate all group ids, idk if this is necessary but i feel like it would make more sense and possibly weed out potential bugs
+            Dictionary<string, ListGroup> newGroups = new Dictionary<string, ListGroup>();
+
+            foreach (ListGroup group in newList.Groups.Values)
+            {
+                Guid newGroupId = Guid.NewGuid();
+                group.Id = newGroupId;
+                newGroups.Add(newGroupId.ToString(), group);
+            }
+
+            newList.Groups = newGroups;
 
             //newList.owner = creatorId; //todo: for user version
 
@@ -157,7 +167,7 @@ public static class ListEndpoints
             //todo: validate data, make sure every entry is there
 
             ListGroup newListGroup = createdGroup.ToEntity();
-            newListGroup.Id = ObjectId.GenerateNewId();
+            newListGroup.Id = Guid.NewGuid();
 
             var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
 
@@ -168,7 +178,7 @@ public static class ListEndpoints
                 return Results.NotFound("list not found");
             }
 
-            ObjectId newGroupId = ObjectId.GenerateNewId();
+            Guid newGroupId = Guid.NewGuid();
             newListGroup.Id = newGroupId;
             existingList.Groups.Add(newGroupId.ToString(), newListGroup);
 
@@ -267,9 +277,9 @@ public static class ListEndpoints
                 return Results.BadRequest("invalid list id");
             }
 
-            ObjectId groupObjId;
+            Guid groupGuid;
 
-            if (!ObjectId.TryParse(gid, out groupObjId))
+            if (!Guid.TryParse(gid, out groupGuid))
             {
                 return Results.BadRequest("invalid group id");
             }
@@ -381,9 +391,9 @@ public static class ListEndpoints
                 return Results.BadRequest("invalid list id");
             }
 
-            ObjectId groupObjId;
+            Guid groupGuid;
 
-            if (!ObjectId.TryParse(gid, out groupObjId))
+            if (!Guid.TryParse(gid, out groupGuid))
             {
                 return Results.BadRequest("invalid group id");
             }

@@ -23,10 +23,10 @@ Content-Type: application/json
     {
       "name": "100-man no inochi no ue ni ore wa tatteiru",
       "groups": [
-        0,
-        3,
-        12,
-        20
+        "0",
+        "3",
+        "12",
+        "20"
       ],
       "groupPositions": {
         "0": 0,
@@ -56,11 +56,11 @@ Content-Type: application/json
     {
       "name": "5-toubun no hanayome",
       "groups": [
-        0,
-        2,
-        13,
-        15,
-        20
+        "0",
+        "2",
+        "13",
+        "15",
+        "20"
       ],
       "groupPositions": {
         "0": 1,
@@ -91,11 +91,11 @@ Content-Type: application/json
     {
       "name": "86",
       "groups": [
-        0,
-        2,
-        12,
-        16,
-        21
+        "0",
+        "2",
+        "12",
+        "16",
+        "21"
       ],
       "groupPositions": {
         "0": 2,
@@ -124,12 +124,43 @@ Content-Type: application/json
       ]
     }
   ],
-  "groups": [
-    {
+  "groups": {
+    "a": {
+      "id": "a9e6ed0f-95ab-46ab-8a79-812b11632b8b",
       "name": "alphabetically",
       "subGroups": [],
       "size": 0,
-      "parent": -1,
+      "parent": "",
+      "position": 0,
+      "settings": {
+        "numbered": false,
+        "autoSort": true,
+        "sortByProperty": "",
+        "sortAscending": true,
+        "collapse": true
+      }
+    },
+    "b": {
+      "id": "a9e6ed0f-95ab-46ab-8a79-812b11632b8b",
+      "name": "alphabetically2",
+      "subGroups": [],
+      "size": 0,
+      "parent": "",
+      "position": 0,
+      "settings": {
+        "numbered": false,
+        "autoSort": true,
+        "sortByProperty": "",
+        "sortAscending": true,
+        "collapse": true
+      }
+    },
+    "c": {
+      "id": "a9e6ed0f-95ab-46ab-8a79-812b11632b8b",
+      "name": "alphabetically3",
+      "subGroups": [],
+      "size": 0,
+      "parent": "",
       "position": 0,
       "settings": {
         "numbered": false,
@@ -139,7 +170,7 @@ Content-Type: application/json
         "collapse": true
       }
     }
-  ],
+  },
   "properties": [
     "last watched",
     "japanese title",
@@ -208,7 +239,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/group/6744d4a88c5e109917cf9043
+PUT http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/group/b9ec34af-ae4d-43cd-a00c-6acb16bfad29
 Content-Type: application/json
 
 {
@@ -223,4 +254,4 @@ DELETE http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/item/2
 
 ###
 
-DELETE http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/group/6744d4a88c5e109917cf9043
+DELETE http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/group/b9ec34af-ae4d-43cd-a00c-6acb16bfad29
