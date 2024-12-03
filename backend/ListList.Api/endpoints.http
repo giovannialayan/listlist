@@ -204,9 +204,8 @@ Content-Type: application/json
 {
     "name": "alphabetically",
     "subGroups": [],
-    "size": 31,
     "parent": "",
-    "position": 0,
+    "position": 5,
     "settings": { "numbered": false, "autoSort": true, "sortByProperty": "", "sortAscending": true, "collapse": true }
 }
 

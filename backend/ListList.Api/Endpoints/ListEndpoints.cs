@@ -206,19 +206,21 @@ public static class ListEndpoints
                 return Results.BadRequest("invalid list id");
             }
 
-            //todo: validate data, make sure every entry is there
-
-            ListGroup newListGroup = createdGroup.ToEntity();
-            newListGroup.Id = Guid.NewGuid();
-
             var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
-
             ListListEntity? existingList = await collection.Find(filter).FirstOrDefaultAsync();
 
             if (existingList is null)
             {
                 return Results.NotFound("list not found");
             }
+
+            //validate position
+            if (createdGroup.Position < 0 || createdGroup.Position >= existingList.Groups.Count)
+            {
+                return Results.BadRequest("invalid group position");
+            }
+
+            ListGroup newListGroup = createdGroup.ToEntity();
 
             Guid newGroupId = Guid.NewGuid();
             newListGroup.Id = newGroupId;
