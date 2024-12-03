@@ -134,12 +134,54 @@ public static class ListEndpoints
                 return Results.BadRequest("invalid list id");
             }
 
-            //todo: validate that all of the data makes sense, like if the item has a group id that doesnt exist
-            //todo: update group size
+            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+            ListListEntity? list = await collection.Find(filter).FirstOrDefaultAsync();
+
+            if (list is null)
+            {
+                return Results.NotFound("list not found");
+            }
 
             ListItem newlistItem = createdItem.ToEntity();
 
-            var filter = Builders<ListListEntity>.Filter.Eq("_id", objId);
+            //validate group ids in item
+            List<string> listGroupIds = list.Groups.Keys.ToList();
+
+            if (newlistItem.Groups.Count > listGroupIds.Count)
+            {
+                return Results.BadRequest("item.Groups has more groups than exist");
+            }
+
+            for (int i = 0; i < newlistItem.Groups.Count; i++)
+            {
+                if (!listGroupIds.Contains(newlistItem.Groups[i]))
+                {
+                    return Results.BadRequest("item.Groups group id " + newlistItem.Groups[i] + " does not exist");
+                }
+            }
+
+            List<string> groupPositionIds = newlistItem.GroupPositions.Keys.ToList();
+
+            if (groupPositionIds.Count != newlistItem.Groups.Count)
+            {
+                return Results.BadRequest("ther number of groups in item.GroupPositions and item.Groups is not equal");
+            }
+
+            if (groupPositionIds.Count > listGroupIds.Count)
+            {
+                return Results.BadRequest("item.GroupPositions has more groups than exist");
+            }
+
+            for (int i = 0; i < groupPositionIds.Count; i++)
+            {
+                if (!listGroupIds.Contains(groupPositionIds[i]))
+                {
+                    return Results.BadRequest("item.GroupPositions group id " + groupPositionIds[i] + " does not exist");
+                }
+            }
+
+            //todo: update group size
+
             var update = Builders<ListListEntity>.Update.Push(list => list.Items, newlistItem);
 
             await collection.UpdateOneAsync(filter, update);

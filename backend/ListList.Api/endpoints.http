@@ -186,8 +186,8 @@ Content-Type: application/json
 
 {
     "name": "86",
-    "groups": [0, 2, 12, 16, 21],
-    "groupPositions": { "0": 2, "2": 40, "12": 1, "16": 0, "21": 0 },
+    "groups": ["8faa02f1-eb24-48b1-809b-c9cc8704367f"],
+    "groupPositions": {"8faa02f1-eb24-48b1-809b-c9cc8704367f": 0 },
     "properties": [
         { "name": "last watched", "data": "2/8/2023" },
         { "name": "japanese title", "data": "86―エイティシックス―" },
@@ -250,7 +250,7 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/item/2
+DELETE http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/item/0
 
 ###
 
