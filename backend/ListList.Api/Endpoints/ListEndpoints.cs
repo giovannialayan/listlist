@@ -215,7 +215,7 @@ public static class ListEndpoints
             }
 
             //validate position
-            if (createdGroup.Position < 0 || createdGroup.Position >= existingList.Groups.Count)
+            if (createdGroup.Position < 0 || createdGroup.Position > existingList.Groups.Count)
             {
                 return Results.BadRequest("invalid group position");
             }
@@ -328,8 +328,6 @@ public static class ListEndpoints
                 return Results.BadRequest("invalid group id");
             }
 
-            //if updatedGroup Name is null, Position is null, Settings.Numbered is null, etc
-
             var filter = Builders<ListListEntity>.Filter.Eq("_id", listObjId);
 
             ListListEntity? list = await collection.Find(filter).FirstOrDefaultAsync();
@@ -406,10 +404,22 @@ public static class ListEndpoints
                 return Results.NotFound("item not found");
             }
 
-            //todo: update size of all groups that this item is in
-            //todo: update group positions for all items in a group with this item
-
+            ListItem removedItem = list.Items[iid];
             list.Items.RemoveAt(iid);
+
+            //update group positions for all items in a group with this item
+            for (int i = 0; i < list.Items.Count; i++)
+            {
+                for (int j = 0; j < removedItem.Groups.Count; j++)
+                {
+                    string currentGroup = removedItem.Groups[j];
+
+                    if (list.Items[i].Groups.Contains(currentGroup) && list.Items[i].GroupPositions[currentGroup] > removedItem.GroupPositions[currentGroup])
+                    {
+                        list.Items[i].GroupPositions[currentGroup]--;
+                    }
+                }
+            }
 
             var update = Builders<ListListEntity>.Update.Set(list => list.Items, list.Items);
 
@@ -456,13 +466,48 @@ public static class ListEndpoints
                 return Results.NotFound("group not found");
             }
 
-            //todo: remove child groups
-            //todo: remove items in group that are only in this group
-            //todo: remove group from parent's subgroups
-            //todo: remove group from items that are in this group and other group(s)
+            //get all groups to remove
+            List<string> groupsToRemove = new List<string>() { gid };
+            for (int i = 0; i < list.Groups[gid].SubGroups.Count; i++)
+            {
+                groupsToRemove.Add(list.Groups[gid].SubGroups[i]);
+            }
 
-            list.Groups.Remove(gid);
-            var update = Builders<ListListEntity>.Update.Set(list => list.Groups, list.Groups);
+            //remove items in group that are only in this group and/or subgroups
+            //remove group from items that are in this group and other group(s)
+            for (int i = 0; i < list.Items.Count; i++)
+            {
+                for (int j = 0; j < groupsToRemove.Count; j++)
+                {
+                    int groupItemIndex = list.Items[i].Groups.IndexOf(groupsToRemove[j]);
+
+                    if (groupItemIndex != -1)
+                    {
+                        list.Items[i].Groups.RemoveAt(groupItemIndex);
+                        list.Items[i].GroupPositions.Remove(groupsToRemove[j]);
+                    }
+                }
+
+                if (list.Items[i].Groups.Count == 0)
+                {
+                    list.Items.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            //remove group from parent's subgroups
+            if (list.Groups[gid].Parent != "")
+            {
+                string parent = list.Groups[gid].Parent;
+                list.Groups[parent].SubGroups.Remove(gid);
+            }
+
+            //remove groups
+            for (int i = 0; i < groupsToRemove.Count; i++)
+            {
+                list.Groups.Remove(groupsToRemove[i]);
+            }
+            var update = Builders<ListListEntity>.Update.Set(list => list.Groups, list.Groups).Set(list => list.Items, list.Items);
 
             await collection.UpdateOneAsync(filter, update);
 

@@ -186,8 +186,8 @@ Content-Type: application/json
 
 {
     "name": "86",
-    "groups": ["8faa02f1-eb24-48b1-809b-c9cc8704367f"],
-    "groupPositions": {"8faa02f1-eb24-48b1-809b-c9cc8704367f": 0 },
+    "groups": ["73d282b5-59a3-4372-bcc0-1e33611d68ae"],
+    "groupPositions": {"73d282b5-59a3-4372-bcc0-1e33611d68ae": 0 },
     "properties": [
         { "name": "last watched", "data": "2/8/2023" },
         { "name": "japanese title", "data": "86―エイティシックス―" },
@@ -205,7 +205,7 @@ Content-Type: application/json
     "name": "alphabetically",
     "subGroups": [],
     "parent": "",
-    "position": 5,
+    "position": 0,
     "settings": { "numbered": false, "autoSort": true, "sortByProperty": "", "sortAscending": true, "collapse": true }
 }
 
@@ -253,4 +253,4 @@ DELETE http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/item/0
 
 ###
 
-DELETE http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/group/b9ec34af-ae4d-43cd-a00c-6acb16bfad29
+DELETE http://localhost:5243/list/6744d1e9b75fd9f9876be5f6/group/73d282b5-59a3-4372-bcc0-1e33611d68ae

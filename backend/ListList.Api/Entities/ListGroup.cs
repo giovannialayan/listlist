@@ -12,8 +12,6 @@ public class ListGroup
 
     public List<string> SubGroups { get; set; } = [];
 
-    public int Size { get; set; } = 0;
-
     public string Parent { get; set; } = "";
 
     public int Position { get; set; }
